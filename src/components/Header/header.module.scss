@@ -1,0 +1,19 @@
+.background {
+    background: yellowgreen;
+    width: 100%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    position: sticky;
+    top: 0px;
+    left: 0px;
+    z-index: 10;
+}
+
+.logo {
+    height: 100px;
+}
+
+.icon {
+    max-height: 70px;
+}
