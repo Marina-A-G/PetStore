@@ -2,17 +2,22 @@
 import {
   ErrorMessage, Field, Form, Formik,
 } from 'formik'
+import { useNavigate } from 'react-router-dom'
 import * as Yup from 'yup'
+import { api } from '../../classes/APIclass'
 import { useUserContext } from '../../contexts/UserContext'
 import ueStyles from './useredit.module.scss'
 
 export function UserEdit() {
-  const { user, editUserData } = useUserContext()
+  const { user, setUser } = useUserContext()
+  const navigate = useNavigate()
   console.log('user from UserEdit')
   console.log(user)
   const ERROR_MESSAGE = 'Надо заполнить!'
 
-  // ПРИВИНТИТЬ ЗАПРОС НА ДАННЫЕ ПОЛЬЗОВАТЕЛЯ
+  const cancelHandler = () => {
+    navigate('/user/')
+  }
 
   return (
     <div className="container">
@@ -46,7 +51,11 @@ export function UserEdit() {
         // ВЫЗОВ ЗАПРОСА НА ИЗМЕНЕНИЕ ДАННЫХ ПОЛЬЗОВАТЕЛЯ
           console.log('reg: values', { values })
           // regUser(values.email, values.password)
-          editUserData(values.name, values.about)
+          api.editUserDataRequest(values.name, values.about).then((response) => {
+            console.log(response)
+            setUser(response)
+            navigate('/user')
+          })
         }}
       >
         <Form className={ueStyles.formContainer}>
@@ -95,6 +104,7 @@ export function UserEdit() {
       <button
         type="button"
         className={ueStyles.formButton}
+        onClick={cancelHandler}
       >
         Не надо менять, всё и так прекрасно!
       </button>

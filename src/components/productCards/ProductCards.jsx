@@ -1,14 +1,9 @@
 /* eslint-disable no-underscore-dangle */
 import React from 'react'
-import { useProductsContext } from '../../contexts/ProductsContext'
 import cardStyles from '../Products/products.module.scss'
 
-export const ProductCards = React.memo(() => {
-  const products = useProductsContext()
-
+export const ProductCards = React.memo(({ products }) => {
   console.log('ProductCard render')
-  // console.log('Products from ProductCard: ')
-  // console.log(products)
 
   if (typeof products === 'undefined') return <div>Products list is empty</div>
   if (!products.length) return <div>Products list is empty</div>
@@ -32,11 +27,3 @@ export const ProductCards = React.memo(() => {
     </div>
   )
 })
-
-/*
-ProductCards = React.memo(ProductCards)
-export {
-  ProductCards,
-}
-// export default React.memo(ProductCards)
- */

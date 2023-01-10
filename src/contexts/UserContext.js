@@ -6,26 +6,6 @@ export const UserContext = React.createContext()
 
 export function UserContextProvider({ children }) {
   const userData = useUser()
-  /*
-  const {
-    user,
-    setUser,
-    authUserRequest,
-    regUserRequest,
-    regUser,
-    getUserDataRequest,
-    editUserData,
-    editUserDataRequest,
-  } = useUser()
-
-  const userHelperValue = useMemo(() => ({
-    setUser,
-    authUserRequest,
-    regUserRequest,
-    regUser,
-    getUserDataRequest,
-  }), [])
-  */
 
   /* ответ при регистрации
   const user = {
@@ -38,6 +18,7 @@ export function UserContextProvider({ children }) {
     group: 'group-7',
     __v: 0,
   } */
+  // const value = {}
 
   return (
     <UserContext.Provider value={userData}>

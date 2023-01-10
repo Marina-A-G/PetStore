@@ -11,9 +11,20 @@
 }
 
 .logo {
-    height: 100px;
+    height: 80px;
 }
 
 .icon {
-    max-height: 70px;
+    max-height: 50px;
+}
+
+.button {
+    background: yellowgreen;
+    border: none;
+    border-radius: 20%;
+    border-color: black;
+    padding: 2px;
+    width: 60px;
+    height: 60px;
+
 }

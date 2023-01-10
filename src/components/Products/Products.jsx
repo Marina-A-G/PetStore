@@ -1,43 +1,37 @@
-// import { useEffect, useContext } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { api } from '../../classes/APIclass'
+// import { Link } from 'react-router-dom'
 // import { ProductsContext } from '../../contexts/ProductsContext'
 import { ProductCards } from '../productCards/ProductCards'
 import prodStyles from './products.module.scss'
 
 export function Products() {
-  const navigate = useNavigate()
-  // navigate - функция!!!
   console.log('Products render')
 
-  function testClick() {
-    console.log('navigate')
-    navigate('/user/')
-  }
+  const [products, setProducts] = useState([])
+  const navigate = useNavigate()
+  // принимает значение по умолчанию для состояния
+  // возвращает 1 сущность - массив с 2 элементами: 1 - наша сущность, 2 - функция, с помощью которой можем менять состояние. И менять сущность только с помощью нее.
 
-  // const { setProducts, getAllProductsRequest } = useContext(ProductsContext)
-
-  /*
   useEffect(() => {
-    getAllProductsRequest().then((data) => {
-      console.log('request for Products')
-      // console.log(data.products[0])
-      setProducts(data.products)
-    })
+    const token = api.checkTokenAvailabilityInLS()
+    if (token) {
+      api.getAllProductsRequest(token).then((response) => {
+        console.log('request for Products from Products')
+        // console.log(data.products[0])
+        setProducts(response.products)
+      })
+    } else {
+      alert('Что-то мы Вас не узнаем. Авторизуйтесь, пожалуйста.')
+      navigate('/')
+    }
   }, [])
-  */
-
-  const prodClick = () => {
-
-  }
 
   return (
     <div className={prodStyles.pageContainer}>
       <h1>Все товары</h1>
-      <Link to="/user/">К пользователю</Link>
-      <Link to="/productCard/">К productCard</Link>
-      <button type="button" onClick={testClick}>К пользователю</button>
-      <button type="button" onClick={prodClick}>Все товары</button>
-      <ProductCards />
+      <ProductCards products={products} />
     </div>
   )
 }

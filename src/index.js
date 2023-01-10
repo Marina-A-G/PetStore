@@ -6,10 +6,7 @@ import App from './App'
 import { Products } from './components/Products/Products'
 import { Authorization } from './components/Authorization/Authorization'
 import { Registration } from './components/Registration/Registration'
-import { UserContextProvider } from './contexts/UserContext'
 import { UserData } from './components/UserData/UserData'
-import { ProductsContextProvider } from './contexts/ProductsContext'
-import { ProductCards } from './components/productCards/ProductCards'
 import { UserEdit } from './components/UserEdit/UserEdit'
 // import reportWebVitals from './reportWebVitals'
 
@@ -20,27 +17,23 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        element: <UserContextProvider><Authorization /></UserContextProvider>,
+        element: <Authorization />,
       },
       {
         path: 'registration/',
-        element: <UserContextProvider><Registration /></UserContextProvider>,
+        element: <Registration />,
       },
       {
         path: 'user/',
-        element: <UserContextProvider><UserData /></UserContextProvider>,
+        element: <UserData />,
       },
       {
         path: 'user/edit/',
-        element: <UserContextProvider><UserEdit /></UserContextProvider>,
+        element: <UserEdit />,
       },
       {
         path: 'products/',
-        element: <ProductsContextProvider><Products /></ProductsContextProvider>,
-      },
-      {
-        path: 'productCards/',
-        element: <ProductsContextProvider><ProductCards /></ProductsContextProvider>,
+        element: <Products />,
       },
     ],
   },

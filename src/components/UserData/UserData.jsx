@@ -1,25 +1,43 @@
+// import { useEffect } from 'react'
 import { useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { api } from '../../classes/APIclass'
 import { useUserContext } from '../../contexts/UserContext'
 
 export function UserData() {
   // const { user } = useUserContext()
   // const { setUser, getUserDataRequest } = useUserHelperContext()
-  const { user, setUser, getUserDataRequest } = useUserContext()
-  console.log('user from userData-1')
+  // const { user, setUser, getUserDataRequest } = useUserContext()
+  const { user, setUser } = useUserContext()
+  const navigate = useNavigate()
+
+  console.log('user from UserData')
   console.log(user)
+  console.log(!Object.keys(user).length)
 
   useEffect(() => {
-    getUserDataRequest().then((response) => {
-      setUser(response)
-      console.log('response in UserData')
-      console.log(response)
-    })
-  }, [])
+    if (!Object.keys(user).length) {
+      const token = api.checkTokenAvailabilityInLS()
+      if (!token) {
+        alert('Что-то мы Вас не узнаем. Авторизуйтесь, пожалуйста.')
+        navigate('/')
+      } else {
+        api.getUserDataRequest(token).then((response) => {
+          if (typeof response.err !== 'undefined' || typeof response.error !== 'undefined') {
+            console.log('response in UserData: ', response)
+            // eslint-disable-next-line max-len, no-alert
+            alert(`Ошибка:  ${response.message}. Попробуйте еще раз или зарегистрируйтесь.`)
+            navigate('/')
+          } else {
+            console.log('response from UserData')
+            console.log(response)
+            setUser(response)
+          }
+        })
+      }
+    }
+  })
 
-  if (typeof user === 'undefined') {
-    return <div />
-  }
   return (
     <div>
       Вот что мы знаем о Вас:
