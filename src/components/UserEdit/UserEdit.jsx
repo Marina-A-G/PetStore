@@ -4,25 +4,59 @@ import {
 } from 'formik'
 import { useNavigate } from 'react-router-dom'
 import * as Yup from 'yup'
+import { useMutation, useQuery } from '@tanstack/react-query'
+import { useEffect } from 'react'
 import { api } from '../../classes/APIclass'
 import { useUserContext } from '../../contexts/UserContext'
 import ueStyles from './useredit.module.scss'
+import { userDataGetQueryKey } from '../../utils/queryKeys'
 
 export function UserEdit() {
-  const { user, setUser } = useUserContext()
+  const { setUser } = useUserContext()
   const navigate = useNavigate()
-  console.log('user from UserEdit')
-  console.log(user)
   const ERROR_MESSAGE = 'Надо заполнить!'
+
+  useEffect(() => {
+    const token = api.checkTokenAvailabilityInLS()
+    if (!token) {
+      alert('Что-то мы Вас не узнаем. Авторизуйтесь, пожалуйста.')
+      navigate('/')
+    }
+  }, [])
+
+  const { data: userData, isLoading } = useQuery({
+    queryKey: [userDataGetQueryKey],
+    queryFn: () => api.getUserDataRequest(),
+    onSuccess: (response) => {
+      setUser(response)
+    },
+    onError: (errResp) => {
+      console.log(`errMessage: ${errResp.message}, errName: ${errResp.name}`)
+    },
+  })
 
   const cancelHandler = () => {
     navigate('/user/')
   }
 
+  const { mutateAsync: userEditHandler } = useMutation({
+    mutationFn: (newData) => api.editUserDataRequest(newData),
+    onSuccess: (response) => {
+      console.log({ response })
+      setUser(response)
+      navigate('/user')
+    },
+    onError: (errResp) => {
+      console.log(`errMessage: ${errResp.message}, errName: ${errResp.name}`)
+    },
+  })
+
+  if (isLoading) return <p>Уточняем данные...</p>
+
   return (
     <div className="container">
       <p>Расскажите нам о себе:</p>
-      <img src={user.avatar} alt="Ваш аватар" width="100px" />
+      <img src={userData.avatar} alt="Ваш аватар" width="100px" />
       <br />
       <button
         type="button"
@@ -34,10 +68,10 @@ export function UserEdit() {
       <br />
       <Formik
         initialValues={{
-          name: user.name,
-          about: user.about,
-          email: user.email,
-          avatar: user.avatar,
+          name: userData.name,
+          about: userData.about,
+          email: userData.email,
+          avatar: userData.avatar,
         }}
         validationSchema={Yup.object({
           name: Yup.string()
@@ -50,12 +84,9 @@ export function UserEdit() {
         onSubmit={(values) => {
         // ВЫЗОВ ЗАПРОСА НА ИЗМЕНЕНИЕ ДАННЫХ ПОЛЬЗОВАТЕЛЯ
           console.log('reg: values', { values })
-          // regUser(values.email, values.password)
-          api.editUserDataRequest(values.name, values.about).then((response) => {
-            console.log(response)
-            setUser(response)
-            navigate('/user')
-          })
+
+          const newData = { name: values.name, about: values.about }
+          userEditHandler(newData)
         }}
       >
         <Form className={ueStyles.formContainer}>

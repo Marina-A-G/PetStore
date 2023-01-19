@@ -7,19 +7,6 @@ export const UserContext = React.createContext()
 export function UserContextProvider({ children }) {
   const userData = useUser()
 
-  /* ответ при регистрации
-  const user = {
-    name: 'Иван Иванов',
-    about: 'Писатель',
-    avatar: 'https://react-learning.ru/image-compressed/default-image.jpg',
-    isAdmin: false,
-    _id: '63ae17be59b98b038f77a3f1',
-    email: 'maxim01@mail.ru',
-    group: 'group-7',
-    __v: 0,
-  } */
-  // const value = {}
-
   return (
     <UserContext.Provider value={userData}>
       {children}

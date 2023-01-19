@@ -1,5 +1,5 @@
 .background {
-    background: yellowgreen;
+    background: rgb(87, 44, 13);
     width: 100%;
     display: flex;
     justify-content: space-around;
@@ -8,6 +8,7 @@
     top: 0px;
     left: 0px;
     z-index: 10;
+    color: rgb(255, 255, 100);
 }
 
 .logo {

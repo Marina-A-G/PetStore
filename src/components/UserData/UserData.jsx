@@ -1,52 +1,48 @@
 // import { useEffect } from 'react'
 import { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
 import { api } from '../../classes/APIclass'
 import { useUserContext } from '../../contexts/UserContext'
+import { userDataGetQueryKey } from '../../utils/queryKeys'
 
 export function UserData() {
-  // const { user } = useUserContext()
-  // const { setUser, getUserDataRequest } = useUserHelperContext()
-  // const { user, setUser, getUserDataRequest } = useUserContext()
-  const { user, setUser } = useUserContext()
+  const { setUser } = useUserContext()
   const navigate = useNavigate()
 
-  console.log('user from UserData')
-  console.log(user)
-  console.log(!Object.keys(user).length)
-
   useEffect(() => {
-    if (!Object.keys(user).length) {
-      const token = api.checkTokenAvailabilityInLS()
-      if (!token) {
-        alert('Что-то мы Вас не узнаем. Авторизуйтесь, пожалуйста.')
-        navigate('/')
-      } else {
-        api.getUserDataRequest(token).then((response) => {
-          if (typeof response.err !== 'undefined' || typeof response.error !== 'undefined') {
-            console.log('response in UserData: ', response)
-            // eslint-disable-next-line max-len, no-alert
-            alert(`Ошибка:  ${response.message}. Попробуйте еще раз или зарегистрируйтесь.`)
-            navigate('/')
-          } else {
-            console.log('response from UserData')
-            console.log(response)
-            setUser(response)
-          }
-        })
-      }
+    const token = api.checkTokenAvailabilityInLS()
+    if (!token) {
+      alert('Что-то мы Вас не узнаем. Авторизуйтесь, пожалуйста.')
+      navigate('/')
     }
+  }, [])
+
+  const { data: userData, isLoading } = useQuery({
+    queryKey: [userDataGetQueryKey],
+    queryFn: () => api.getUserDataRequest(),
+    onSuccess: (response) => {
+      setUser(response)
+    },
+    onError: (errResp) => {
+      console.log(`errMessage: ${errResp.message}, errName: ${errResp.name}`)
+    },
+
   })
+
+  if (isLoading) return <p>Уточняем данные...</p>
 
   return (
     <div>
       Вот что мы знаем о Вас:
       <br />
-      {user.name}
+      <img src={userData.avatar} alt="Ваш аватар" width="100px" />
       <br />
-      {user.about}
+      {userData.name}
       <br />
-      {user.email}
+      {userData.about}
+      <br />
+      {userData.email}
       <br />
       Что-то неверно? Хотите дополнить? Тогда
       {' '}

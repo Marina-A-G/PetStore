@@ -23,7 +23,6 @@ function Header() {
     const tokenObjFromLS = localStorage.getItem(TokenLSkey)
     if (tokenObjFromLS) {
       const tokenObj = JSON.parse(tokenObjFromLS)
-      console.log(`token=${tokenObj.token}`)
       if (tokenObj.token) {
         navigate('user/')
       } else {
@@ -38,7 +37,7 @@ function Header() {
 
   return (
     <header className={headerStyles.background}>
-      <h1>Это header</h1>
+      <h1>Хрум-чавк!</h1>
       <SearchBar />
       <button type="button" className={headerStyles.button} onClick={cartClickHandler}>
         <img src={picCart} alt="Корзина" className={headerStyles.icon} />

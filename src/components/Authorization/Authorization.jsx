@@ -1,10 +1,15 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { Link, useNavigate } from 'react-router-dom'
 import {
   Formik, Form, Field, ErrorMessage,
 } from 'formik'
 import * as Yup from 'yup'
-// все сущности библиотеки yup мы импортируем и даем название Yup
+import {
+  useQuery,
+  useMutation,
+  useQueryClient,
+} from '@tanstack/react-query'
 import authStyles from './authorization.module.scss'
 import { useUserContext } from '../../contexts/UserContext'
 import { TokenLSkey } from '../../utils/constants'
@@ -14,8 +19,34 @@ const ERROR_MESSAGE = 'Надо заполнить!'
 
 export function Authorization() {
   console.log('Authorization renders')
-  const { setUser } = useUserContext()
+  const queryClient = useQueryClient()
+  const { user, setUser } = useUserContext()
   const navigate = useNavigate()
+
+  const userAuthSuccess = (response) => {
+    const LSdata = {
+      email: response.data.email,
+      token: response.token,
+    }
+    console.log({ LSdata })
+    localStorage.setItem(TokenLSkey, JSON.stringify(LSdata))
+    setUser(response.data)
+    navigate('products/')
+  }
+
+  const userAuthError = (errMessage) => {
+    alert(`Ошибка:  ${errMessage}. Попробуйте еще раз или зарегистрируйтесь.`)
+  }
+
+  const { mutateAsync: userAuthHandler } = useMutation({
+    mutationFn: (authData) => api.authUserRequest(authData),
+    onSuccess: (response) => { userAuthSuccess(response) },
+    // eslint-disable-next-line max-len
+    onError: (errResp) => {
+      console.log(`errMessage: ${errResp.message}, errName: ${errResp.name}`)
+      userAuthError(errResp.message)
+    },
+  })
 
   return (
     <div>
@@ -28,7 +59,6 @@ export function Authorization() {
 
       <Formik
         initialValues={{
-          firstName: '',
           email: '',
           password: '',
         }}
@@ -42,24 +72,12 @@ export function Authorization() {
         })}
         onSubmit={(values) => {
           // ВЫЗОВ ЗАПРОСА НА АВТОРИЗАЦИЮ
-          api.authUserRequest(values.email, values.password).then((response) => {
-            if (typeof response.err !== 'undefined' || typeof response.error !== 'undefined') {
-              console.log('response in auth: ', response)
-              // eslint-disable-next-line max-len, no-alert
-              alert(`Ошибка:  ${response.message}. Попробуйте еще раз или зарегистрируйтесь.`)
-            } else {
-              const LSdata = {
-                email: values.email,
-                token: response.token,
-              }
-              localStorage.setItem(TokenLSkey, JSON.stringify(LSdata))
-              console.log('authUser, response: ', response)
-              setUser(response.data)
-              navigate('products/')
-            }
-          }).catch(alert)
+          const authData = { email: values.email, password: values.password }
+          userAuthHandler(authData)
         }}
+
       >
+
         <Form className={authStyles.formContainer}>
           <Field
             className={authStyles.formField}
@@ -101,14 +119,6 @@ export function Authorization() {
   )
 }
 
-// <Navigate to="/products" />
-
-/*
- validationSchema={Yup.object({
-  обращаемся к библиотеке Yup - это объект, у него есть ключ object - это метод.
-  И этот метод принимает некоторый объект в себя
-  Этот внутренний объект выполняет валидацию над ключами формы        */
-
 /*
 Ответ при ошибке:
 {message: 'Неправильные почта или пароль', err: {…}}
@@ -128,7 +138,20 @@ data:
   name: "Иван Иванов"
   __v: 0
   _id: "63b1afd459b98b038f77a3f6"
-[[Prototype]]: Object
+
 token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2M2IxYWZkNDU5Yjk4YjAzOGY3N2EzZjYiLCJncm91cCI6InNtOCIsImlhdCI6MTY3MzEyNTA2OCwiZXhwIjoxNzA0NjYxMDY4fQ.MwNw7Wdwt_OnD30irrSAQQXDZHa2xcEX_KMr7UfE3Uc"
-[[Prototype]]:Object
+
 */
+
+/*
+  const queryClient = useQueryClient() // получаем нашего query-клиента через контекст
+
+  const { mutateAsync: userAuthHandler } = useMutation({
+    mutationFn: (email, password) => api.authUserRequest(email, password),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [allProductsQueryKey] })
+    },
+  }) */
+// каждый раз, когда будем выполнять запрос, будем обновлять запросы, перечисленные в queryKey. По сути, объявляем их всех устаревшими, и все они будут выполнены заново
+// mutateAsync - если надо обязательно дождаться завершения выполнения функции, чтобы потом сделать что-то еще. Дальше const fun = async() => {await mutateAsync() }
+// mutate - если не нужно дожидаться окончания.

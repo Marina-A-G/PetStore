@@ -7,12 +7,11 @@ export function SearchBar() {
 
   return (
     <div className={searchStyles.container}>
-      <div>Это окошко поиска</div>
       <form>
         <input
           type="text"
           className={searchStyles.input}
-          placeholder="Поиск >>>"
+          placeholder="Что-то ищете?"
           value={input}
           onChange={(event) => setInput(event.target.value)}
         />

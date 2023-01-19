@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import App from './App'
 import { Products } from './components/Products/Products'
 import { Authorization } from './components/Authorization/Authorization'
@@ -9,6 +10,8 @@ import { Registration } from './components/Registration/Registration'
 import { UserData } from './components/UserData/UserData'
 import { UserEdit } from './components/UserEdit/UserEdit'
 // import reportWebVitals from './reportWebVitals'
+
+const queryClient = new QueryClient()
 
 const router = createBrowserRouter([
   {
@@ -43,9 +46,16 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <QueryClientProvider client={queryClient}>
+      <RouterProvider router={router} />
+    </QueryClientProvider>
   </React.StrictMode>,
 )
+// вот этот router в {} - {router} - это созданный const router=createBrowserRouter
+
+/* TanStack query
+создаем query-клиента и оборачиваем в него все приложение
+*/
 
 /*
   <React.StrictMode>

@@ -33,5 +33,6 @@ module.exports = {
     // ignoreComments: 0,
     // ignoreTrailingComments: 0,
     'react/jsx-no-constructed-context-values': 'warn',
+    'no-debugger': 0,
   },
 }

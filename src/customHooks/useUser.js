@@ -1,48 +1,15 @@
 /* eslint-disable no-irregular-whitespace */
 import { useState } from 'react'
-// import {
-// group, TokenLSkey, URLbase, URLsignin, URLsignup, URLuserInfo,
-// } from '../utils/constants'
 
 export const useUser = () => {
   const [user, setUser] = useState({})
   console.log('useUser render')
-
-  // GETTING USERDATA
-  /*
-
-  async function getUserDataRequest() {
-    try {
-      const { token } = JSON.parse(localStorage.getItem(TokenLSkey))
-      const response = await fetch(`${URLbase}${URLuserInfo}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          authorization: `Bearer ${token}`,
-        },
-      })
-      return response.json()
-    } catch (error) {
-      console.log('ошибка в regUserRequest')
-      throw new Error(error)
-    }
-  }
-
-  } */
-
-  //  RETURN
 
   return {
     user,
     setUser,
   }
 }
-
-/*
-getUserDataRequest,
-editUserData,
-editUserDataRequest,
-*/
 
 /*
 ответы при успешной регистрации:

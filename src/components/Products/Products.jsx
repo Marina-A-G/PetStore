@@ -1,41 +1,53 @@
-import { useEffect, useState } from 'react'
+/* eslint-disable no-unused-vars */
+import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useQuery } from '@tanstack/react-query'
 import { api } from '../../classes/APIclass'
 // import { Link } from 'react-router-dom'
 // import { ProductsContext } from '../../contexts/ProductsContext'
 import { ProductCards } from '../productCards/ProductCards'
 import prodStyles from './products.module.scss'
+import { TokenLSkey } from '../../utils/constants'
+
+export const allProductsQueryKey = 'allProducts'
+const URLbase = 'https://api.react-learning.ru/'
+const URLproductsAll = 'products/'
 
 export function Products() {
   console.log('Products render')
-
-  const [products, setProducts] = useState([])
   const navigate = useNavigate()
-  // принимает значение по умолчанию для состояния
-  // возвращает 1 сущность - массив с 2 элементами: 1 - наша сущность, 2 - функция, с помощью которой можем менять состояние. И менять сущность только с помощью нее.
-
   useEffect(() => {
     const token = api.checkTokenAvailabilityInLS()
-    if (token) {
-      api.getAllProductsRequest(token).then((response) => {
-        console.log('request for Products from Products')
-        // console.log(data.products[0])
-        setProducts(response.products)
-      })
-    } else {
+    if (!token) {
       alert('Что-то мы Вас не узнаем. Авторизуйтесь, пожалуйста.')
       navigate('/')
     }
   }, [])
 
+  const { data, isLoading, isFetching } = useQuery({
+    queryKey: [allProductsQueryKey],
+    queryFn: () => api.getAllProductsRequest(),
+  })
+
+  /* в queryFn должны указать ссылку на функцию, которая возвращает промис. Но НЕ вызов функции
+  > результат - объект, в котором есть ключ data. В него попадает все, что приходит из функции, указанной в queryFn.
+  > в примере функция заведена const getAllContacts=()=> fetch('..').then ((res) => res.json())
+  > const {data: contacts, isLoading} - переименование data в библиотеке в contacts в коде
+  > эта штука возвращает кучу всяких is-: isLoading, isError, isFEtched и многое другое
+  */
+
+  if (isLoading) return <p>Грузимся-грузимся</p>
+  // if (!products.length) return <p>Товаров неть...</p>
+
   return (
     <div className={prodStyles.pageContainer}>
-      <h1>Все товары</h1>
-      <ProductCards products={products} />
+
+      {isLoading ? <p>Грузимся</p>
+        : <ProductCards products={data.products} />}
     </div>
   )
 }
-
+//       <p>{isFetching && 'Идет обновление'}</p>
 /*
 {discount: 15, stock: 10, available: true, pictures: 'https://react-learning.ru/image-compressed/1.jpg', likes: Array(38), …}
 author: {name: 'Jam Kerry 2', about: 'Actor', avatar: 'https://nationaltoday.com/wp-content/uploads/2020/05/Yoda.jpg', _id: '622bd81b06c7d323b8ae4614', email: 'maxim_91@inbox.ru', …}

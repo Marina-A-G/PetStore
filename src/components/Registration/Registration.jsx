@@ -1,9 +1,11 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import {
   Formik, Form, Field, ErrorMessage,
 } from 'formik'
 import * as Yup from 'yup'
 import { Link, useNavigate } from 'react-router-dom'
+import { useMutation } from '@tanstack/react-query'
 import regStyles from './registration.module.scss'
 import { useUserContext } from '../../contexts/UserContext'
 import { api } from '../../classes/APIclass'
@@ -15,6 +17,35 @@ export function Registration() {
   console.log('Registration renders')
   const { setUser } = useUserContext()
   const navigate = useNavigate()
+
+  const userRegSuccess = (response, regData) => {
+    // console.log('регистрация прошла успешно')
+    setUser(response)
+
+    api.authUserRequest(regData).then((responseAuth) => {
+      const LSdata = {
+        email: responseAuth.data.email,
+        token: responseAuth.token,
+      }
+      console.log({ LSdata })
+      localStorage.setItem(TokenLSkey, JSON.stringify(LSdata))
+      navigate('/user/')
+    })
+      .catch((errMessage) => alert(`Ошибка:  ${errMessage}.`))
+  }
+
+  const userRegError = (errMessage) => {
+    alert(`Ошибка:  ${errMessage}. Попробуйте еще раз.`)
+  }
+
+  const { mutateAsync: userRegHandler } = useMutation({
+    mutationFn: (regData) => api.regUserRequest(regData),
+    onSuccess: (response, regData) => { userRegSuccess(response, regData) },
+    onError: (errResp) => {
+      console.log(`errMessage: ${errResp.message}, errName: ${errResp.name}`)
+      userRegError(errResp.message)
+    },
+  })
 
   return (
     <div>
@@ -39,27 +70,10 @@ export function Registration() {
         onSubmit={(values) => {
         // ВЫЗОВ ЗАПРОСА НА РЕГИСТРАЦИЮ
           // console.log('reg: values', { values })
-
-          api.regUserRequest(values.email, values.password).then((response) => {
-            if (typeof response.err !== 'undefined' || typeof response.error !== 'undefined') {
-              console.log('response in regUser: ', response)
-              // eslint-disable-next-line max-len, no-alert
-              alert(`Ошибка:  ${response.message}. Попробуйте еще раз.`)
-            } else {
-              console.log('регистрация прошла успешно')
-              setUser(response)
-              api.authUserRequest(values.email, values.password).then((responseAuth) => {
-                const LSdata = {
-                  email: values.email,
-                  token: responseAuth.token,
-                }
-                localStorage.setItem(TokenLSkey, JSON.stringify(LSdata))
-                navigate('/user/')
-              })
-              // после регистрации сразу авторизация и получение токена, чтобы пользователь не успел задолбаться
-            }
-          }).catch(alert)
+          const regData = { email: values.email, password: values.password }
+          userRegHandler(regData)
         }}
+        // после регистрации сразу авторизация и получение токена, чтобы пользователь не успел задолбаться
       >
         <Form className={regStyles.formContainer}>
           <Field
@@ -115,3 +129,16 @@ export function Registration() {
     </div>
   )
 }
+
+/* ответ при регистрации
+  const user = {
+    name: 'Иван Иванов',
+    about: 'Писатель',
+    avatar: 'https://react-learning.ru/image-compressed/default-image.jpg',
+    isAdmin: false,
+    _id: '63ae17be59b98b038f77a3f1',
+    email: 'maxim01@mail.ru',
+    group: 'group-7',
+    __v: 0,
+  } */
+// const value = {}
