@@ -6,10 +6,12 @@ import {
 import * as Yup from 'yup'
 import { Link, useNavigate } from 'react-router-dom'
 import { useMutation } from '@tanstack/react-query'
+import { useDispatch } from 'react-redux'
 import regStyles from './registration.module.scss'
 import { useUserContext } from '../../contexts/UserContext'
 import { api } from '../../classes/APIclass'
 import { TokenLSkey } from '../../utils/constants'
+import { tokenAddAC } from '../../ReduxClear/actionCreators/tokenAC'
 
 const ERROR_MESSAGE = 'Надо заполнить!'
 
@@ -17,6 +19,7 @@ export function Registration() {
   console.log('Registration renders')
   const { setUser } = useUserContext()
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const userRegSuccess = (response, regData) => {
     // console.log('регистрация прошла успешно')
@@ -29,6 +32,7 @@ export function Registration() {
       }
       console.log({ LSdata })
       localStorage.setItem(TokenLSkey, JSON.stringify(LSdata))
+      dispatch(tokenAddAC(responseAuth.token))
       navigate('/user/')
     })
       .catch((errMessage) => alert(`Ошибка:  ${errMessage}.`))

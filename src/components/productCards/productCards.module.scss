@@ -1,4 +1,6 @@
 $gridColumnWidth: 200px;
+$colorDarkMain: rgb(87, 44, 13);
+$colorLightMain: #ffe4b5;
 
 .CardsBlockContainer {
     display: grid;
@@ -20,10 +22,11 @@ $gridColumnWidth: 200px;
     border: 2px solid rgb(87, 44, 13);
     box-shadow: 3px 3px 20px black;
     padding: 20px;
+    position: relative;
 }
 
 .cardPicture {
-    max-width: 100%;
+    max-width: 80%;
     align: center;
     border: 3px;
     border-radius: 3px;
@@ -31,16 +34,46 @@ $gridColumnWidth: 200px;
 }
 
 .cardPrice {
-    color: rgb(87, 44, 13);
+    color: $colorDarkMain;
     font-weight: 500;
     font-size: 15px;
 }
 
 .cardName {
-    color: rgb(87, 44, 13);
+    color: $colorDarkMain;
     font-size: 12px;
 }
 
+.cardCartButton {
+    width: 80px;
+    height: 30px;
+    background-color: $colorLightMain;
+    color: $colorDarkMain;
+    border: solid $colorDarkMain 2px;
+    border-radius: 3px;
+}
+
+.cardCartInput {
+    width: 60px;
+    height: 25px;
+    text-align: center;
+}
+
+.cardCartElementsContainer {
+    width: 160px;
+    height: 30px;
+    display: flex;
+    justify-content: space-between;
+    position: absolute;
+    bottom: 20px;
+}
+
+.priceInitial {
+    text-decoration: line-through;
+    color: gray
+}
+
+.priceFinal {}
 
 
 @media only screen and (max-width: 1000px) {

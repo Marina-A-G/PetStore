@@ -1,5 +1,9 @@
+$colorDarkMain: rgb(87, 44, 13);
+$colorLightMain: #ffe4b5;
+$colorAccent: rgb(255, 255, 100);
+
 .background {
-    background: rgb(87, 44, 13);
+    background: $colorDarkMain;
     width: 100%;
     display: flex;
     justify-content: space-around;
@@ -16,16 +20,24 @@
 }
 
 .icon {
-    max-height: 50px;
+    height: 30px;
 }
 
 .button {
-    background: yellowgreen;
-    border: none;
+    background: $colorDarkMain;
+    border: solid 2px $colorLightMain;
     border-radius: 20%;
-    border-color: black;
     padding: 2px;
     width: 60px;
-    height: 60px;
+    height: 40px;
+    background-image: inherit;
+    color: $colorLightMain;
 
+    &:hover {
+        box-shadow: 3px 3px 20px $colorLightMain;
+    }
+}
+
+.raznoe {
+    box-shadow: 3px 3px 20px $colorAccent;
 }

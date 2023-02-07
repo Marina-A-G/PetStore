@@ -2,6 +2,7 @@
 import { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import { useSelector } from 'react-redux'
 import { api } from '../../classes/APIclass'
 import { useUserContext } from '../../contexts/UserContext'
 import { userDataGetQueryKey } from '../../utils/queryKeys'
@@ -9,9 +10,9 @@ import { userDataGetQueryKey } from '../../utils/queryKeys'
 export function UserData() {
   const { setUser } = useUserContext()
   const navigate = useNavigate()
+  const token = useSelector((store) => store.token)
 
   useEffect(() => {
-    const token = api.checkTokenAvailabilityInLS()
     if (!token) {
       alert('Что-то мы Вас не узнаем. Авторизуйтесь, пожалуйста.')
       navigate('/')
@@ -20,7 +21,7 @@ export function UserData() {
 
   const { data: userData, isLoading } = useQuery({
     queryKey: [userDataGetQueryKey],
-    queryFn: () => api.getUserDataRequest(),
+    queryFn: () => api.getUserDataRequest(token),
     onSuccess: (response) => {
       setUser(response)
     },

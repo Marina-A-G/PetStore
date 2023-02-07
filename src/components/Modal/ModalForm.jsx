@@ -8,7 +8,7 @@ export function ModalForm({ message }) {
       <h2>{message}</h2>
       <input
         type="text"
-        placeholder={message}
+        placeholder="афигеть!.."
         className="form-control"
       />
       <button type="submit" className={modalStyles.button}>

@@ -10,27 +10,23 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query'
+import { useDispatch } from 'react-redux'
 import authStyles from './authorization.module.scss'
 import { useUserContext } from '../../contexts/UserContext'
 import { TokenLSkey } from '../../utils/constants'
 import { api } from '../../classes/APIclass'
+import { tokenAddAC } from '../../ReduxClear/actionCreators/tokenAC'
 
 const ERROR_MESSAGE = 'Надо заполнить!'
 
 export function Authorization() {
   console.log('Authorization renders')
   const queryClient = useQueryClient()
-  const { user, setUser } = useUserContext()
   const navigate = useNavigate()
+  const dispatch = useDispatch()
 
   const userAuthSuccess = (response) => {
-    const LSdata = {
-      email: response.data.email,
-      token: response.token,
-    }
-    console.log({ LSdata })
-    localStorage.setItem(TokenLSkey, JSON.stringify(LSdata))
-    setUser(response.data)
+    dispatch(tokenAddAC(response.token))
     navigate('products/')
   }
 

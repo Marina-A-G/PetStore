@@ -3,12 +3,15 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { Provider } from 'react-redux'
 import App from './App'
 import { Products } from './components/Products/Products'
 import { Authorization } from './components/Authorization/Authorization'
 import { Registration } from './components/Registration/Registration'
 import { UserData } from './components/UserData/UserData'
 import { UserEdit } from './components/UserEdit/UserEdit'
+import { Cart } from './components/Cart/Cart'
+import { store } from './ReduxClear/store'
 // import reportWebVitals from './reportWebVitals'
 
 const queryClient = new QueryClient()
@@ -38,6 +41,10 @@ const router = createBrowserRouter([
         path: 'products/',
         element: <Products />,
       },
+      {
+        path: 'cart/',
+        element: <Cart />,
+      },
     ],
   },
 ])
@@ -46,9 +53,11 @@ const router = createBrowserRouter([
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(
   <React.StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </Provider>
   </React.StrictMode>,
 )
 // вот этот router в {} - {router} - это созданный const router=createBrowserRouter

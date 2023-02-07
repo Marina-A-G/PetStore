@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom'
 import * as Yup from 'yup'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useEffect } from 'react'
+import { useSelector } from 'react-redux'
 import { api } from '../../classes/APIclass'
 import { useUserContext } from '../../contexts/UserContext'
 import ueStyles from './useredit.module.scss'
@@ -15,9 +16,9 @@ export function UserEdit() {
   const { setUser } = useUserContext()
   const navigate = useNavigate()
   const ERROR_MESSAGE = 'Надо заполнить!'
+  const token = useSelector((store) => store.token)
 
   useEffect(() => {
-    const token = api.checkTokenAvailabilityInLS()
     if (!token) {
       alert('Что-то мы Вас не узнаем. Авторизуйтесь, пожалуйста.')
       navigate('/')
@@ -26,7 +27,7 @@ export function UserEdit() {
 
   const { data: userData, isLoading } = useQuery({
     queryKey: [userDataGetQueryKey],
-    queryFn: () => api.getUserDataRequest(),
+    queryFn: () => api.getUserDataRequest(token),
     onSuccess: (response) => {
       setUser(response)
     },
@@ -40,7 +41,7 @@ export function UserEdit() {
   }
 
   const { mutateAsync: userEditHandler } = useMutation({
-    mutationFn: (newData) => api.editUserDataRequest(newData),
+    mutationFn: (newData) => api.editUserDataRequest(newData, token),
     onSuccess: (response) => {
       console.log({ response })
       setUser(response)

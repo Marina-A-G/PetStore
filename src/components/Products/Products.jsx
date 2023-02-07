@@ -2,31 +2,43 @@
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
+import { useDispatch, useSelector } from 'react-redux'
 import { api } from '../../classes/APIclass'
 // import { Link } from 'react-router-dom'
 // import { ProductsContext } from '../../contexts/ProductsContext'
 import { ProductCards } from '../productCards/ProductCards'
 import prodStyles from './products.module.scss'
 import { TokenLSkey } from '../../utils/constants'
+import { productsSetAC } from '../../ReduxClear/actionCreators/productsAC'
 
 export const allProductsQueryKey = 'allProducts'
 const URLbase = 'https://api.react-learning.ru/'
 const URLproductsAll = 'products/'
 
 export function Products() {
-  console.log('Products render')
+  // onsole.log('Products render')
   const navigate = useNavigate()
+  const dispatch = useDispatch()
+
+  const token = useSelector((store) => store.token)
+  const products = useSelector((store) => store.products)
+
   useEffect(() => {
-    const token = api.checkTokenAvailabilityInLS()
+    // const token = api.checkTokenAvailabilityInLS()
     if (!token) {
       alert('Что-то мы Вас не узнаем. Авторизуйтесь, пожалуйста.')
       navigate('/')
     }
   }, [])
 
-  const { data, isLoading, isFetching } = useQuery({
+  const getAllProductsSuccess = (prods) => {
+    dispatch(productsSetAC(prods))
+  }
+
+  const { data, isLoading } = useQuery({
     queryKey: [allProductsQueryKey],
-    queryFn: () => api.getAllProductsRequest(),
+    queryFn: () => api.getAllProductsRequest(token),
+    onSuccess: (response) => getAllProductsSuccess(response.products),
   })
 
   /* в queryFn должны указать ссылку на функцию, которая возвращает промис. Но НЕ вызов функции
@@ -43,7 +55,7 @@ export function Products() {
     <div className={prodStyles.pageContainer}>
 
       {isLoading ? <p>Грузимся</p>
-        : <ProductCards products={data.products} />}
+        : <ProductCards products={products} />}
     </div>
   )
 }

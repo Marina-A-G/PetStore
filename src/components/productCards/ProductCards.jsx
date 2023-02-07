@@ -4,10 +4,8 @@ import cardStyles from './productCards.module.scss'
 import { ProductCard } from './productCard'
 
 export const ProductCards = React.memo(({ products }) => {
-  console.log('ProductCard render')
-
   // if (typeof products === 'undefined') return <div>Products list is empty</div>
-  // if (!products.length) return <div>Products list is empty</div>
+  if (!products.length) return <div>А воть не найдено ничего...</div>
 
   return (
     <div className={cardStyles.CardsBlockContainer}>

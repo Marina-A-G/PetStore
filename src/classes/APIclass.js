@@ -15,6 +15,8 @@ class APIforPetStore {
     this.URLproductsAll = 'products/'
     this.URLuserInfo = `v2/${this.group}/users/me/` // with GET method
     this.URLuserEdit = `v2/${this.group}/users/me` // with PATCH method
+    this.URLproductsSearched = 'products/search?query=' // for products search. With GET method
+    this.URLproductByID = 'products/' // :id - получение товра по id - GET
   }
 
   /// ///////////////////////////  USER  ///////////////////////////
@@ -66,8 +68,8 @@ class APIforPetStore {
 
   //    GETTING USERDATA request
 
-  async getUserDataRequest() {
-    const { token } = JSON.parse(localStorage.getItem(TokenLSkey))
+  async getUserDataRequest(token) {
+    // const { token } = JSON.parse(localStorage.getItem(TokenLSkey))
     const response = await fetch(`${this.URLbase}${this.URLuserInfo}`, {
       method: 'GET',
       headers: {
@@ -85,8 +87,8 @@ class APIforPetStore {
 
   //    USER DATA EDIT request
 
-  async editUserDataRequest(reqData) {
-    const { token } = JSON.parse(localStorage.getItem(TokenLSkey))
+  async editUserDataRequest(reqData, token) {
+    // const { token } = JSON.parse(localStorage.getItem(TokenLSkey))
     const response = await fetch(`${this.URLbase}${this.URLuserInfo}`, {
       method: 'PATCH',
       headers: {
@@ -107,8 +109,7 @@ class APIforPetStore {
 
   //  GET ALL PRODUCTS request
 
-  async getAllProductsRequest() {
-    const { token } = JSON.parse(localStorage.getItem(TokenLSkey))
+  async getAllProductsRequest(token) {
     const response = await fetch(`${this.URLbase}${this.URLproductsAll}`, {
       // method: 'GET',
       headers: {
@@ -126,6 +127,40 @@ class APIforPetStore {
     // и then потом понадобится в любом случае(((
   }
 
+  //  GET SEARCHED PRODUCTS
+
+  async getSearchedProductsRequest(searched, token) {
+    console.log(`${this.URLbase}${this.URLproductsSearched}${searched}`)
+    const response = await fetch(`${this.URLbase}${this.URLproductsSearched}${searched}`, {
+      // method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+    })
+    if (response.status > 399) {
+      const errMessage = await response.json()
+      console.log({ errMessage })
+      throw new Error(errMessage.message)
+    }
+    return response.json()
+  }
+
+  //  GET SET OF PRODUCTS BY IDS
+
+  async getProductsByIDs(ids, token) {
+    // eslint-disable-next-line max-len
+    return Promise.all(ids.map((id) => fetch(
+      `${this.URLbase}${this.URLproductByID}${id}`,
+      {
+      // method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    ).then((res) => res.json())))
+  }
   /// //////////// CHECKS  ////////////////////////
   // это на случай слишком креативного пользователя:
   // 1 - если он вышел, а потом пошел сразу на страничку продуктов или данных
