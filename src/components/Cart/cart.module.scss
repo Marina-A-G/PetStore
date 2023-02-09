@@ -40,20 +40,21 @@ $borderRadius: 20px;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;
-    align-items: stretch;
-
+    align-items: center;
+    position: relative;
 }
 
 .cartItemPicture {
     width: 90px;
     margin: 5px;
     border: solid 2px $colorDarkMain;
+    border-radius: $borderRadius;
 }
 
 .cartItemName {
-    width: 90px;
+    width: 100px;
     margin: 5px;
-    border: solid 2px $colorDarkMain;
+    font-size: 10pt;
 }
 
 .cartItemTotal {
@@ -63,7 +64,40 @@ $borderRadius: 20px;
 }
 
 .cartItemQuantityBlock {
-    width: 90px;
+    width: 120px;
     margin: 5px;
-    border: solid 2px $colorDarkMain;
+
+    font-size: 10pt;
+}
+
+.cartQuantity {
+    width: 20px;
+    text-align: right;
+}
+
+.cartButton {
+    width: 20px;
+    height: 20px;
+}
+
+.cartButtonDelete {
+    background-image: url('./iconDelete.png');
+    background-size: contain;
+    border: none;
+    margin-left: 20px;
+}
+
+.cartButtonActive {
+    background-color: $colorLightMain;
+    color: $colorDarkMain;
+    border: solid $colorDarkMain 1px;
+    border-radius: 10px;
+}
+
+.cartButtonNonActive {
+    background-color: lightgrey;
+    color: $colorDarkMain;
+    border: solid gray 1px;
+    border-radius: 10px;
+
 }

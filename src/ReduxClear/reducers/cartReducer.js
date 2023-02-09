@@ -1,6 +1,10 @@
 import { initialState } from '../initialState'
 import {
-  CART_ADD_PRODUCT, CART_CHANGE_PRODUCT_QUANTITY, CART_CLEAR, CART_REMOVE_PRODUCT,
+  CART_ADD_PRODUCT,
+  CART_CHANGE_PRODUCT_QUANTITY,
+  CART_CLEAR,
+  CART_REMOVE_PRODUCT,
+  CART_SET_EXTENDED_FROM_SERVER,
 } from '../types/cartTypes'
 
 // eslint-disable-next-line default-param-last
@@ -14,7 +18,7 @@ export const cartReducer = (state = initialState.cart, action) => {
           if (item.id === action.payload.id) {
             return {
               ...item,
-              quantity: +item.quantity + +action.payload.quantity,
+              quantity: action.payload.quantity,
             }
           }
           return item
@@ -24,9 +28,19 @@ export const cartReducer = (state = initialState.cart, action) => {
     case CART_REMOVE_PRODUCT:
       return state.filter((product) => product.id !== action.payload)
     case CART_CHANGE_PRODUCT_QUANTITY:
-      return state
+      return state.map((item) => {
+        if (item.id === action.payload.id) {
+          return {
+            ...item,
+            quantity: action.payload.newQuantity,
+          }
+        }
+        return item
+      })
     case CART_CLEAR:
       return []
+    case CART_SET_EXTENDED_FROM_SERVER:
+      return action.payload
     default: return state
   }
 }

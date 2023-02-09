@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { SearchBar } from '../SearchBar/SearchBar'
 import headerStyles from './header.module.scss'
 import picCart from './CatLogo2.png'
@@ -12,6 +12,7 @@ function Header() {
   // console.log('header render')
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const cartQuantity = useSelector((store) => store.cart).length
 
   const catalogClickHandler = () => {
     navigate('products/')
@@ -46,18 +47,39 @@ function Header() {
     <header className={headerStyles.background}>
       <h1>Хрум-чавк!</h1>
       <SearchBar />
-      <button type="button" className={headerStyles.button} onClick={catalogClickHandler}>
+      <button
+        type="button"
+        className={headerStyles.button}
+        title="Ну вот, на кнопке же написано"
+        onClick={catalogClickHandler}
+      >
         Ката лог
       </button>
-      <button type="button" className={headerStyles.button} onClick={cartClickHandler}>
-        <img src={picCart} alt="Корзина" className={headerStyles.icon} />
-      </button>
-      <button type="button" className={headerStyles.button} onClick={userClickHandler}>
+      <div className={headerStyles.forCart}>
+        <button
+          type="button"
+          className={headerStyles.button}
+          title="Корзина"
+          onClick={cartClickHandler}
+        >
+          <img src={picCart} alt="Корзина" className={headerStyles.icon} />
+        </button>
+        {cartQuantity > 0
+        && (<div className={headerStyles.cartQuantity}>{cartQuantity}</div>)}
+      </div>
+
+      <button
+        type="button"
+        className={headerStyles.button}
+        title="Пользователь"
+        onClick={userClickHandler}
+      >
         <img src={picUser} alt="Юзверь" className={headerStyles.icon} />
       </button>
       <button
         type="button"
         className={headerStyles.button}
+        title="Выход. Но приходите ещё!"
         onClick={exitClickHandler}
         style={{ backgroundImage: './exit02.png' }}
       >
