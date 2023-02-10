@@ -19,19 +19,7 @@ export function Cart() {
   // let cartExtended = []
   // const [cartExtended, setCartExtended] = useState([])
 
-  const cartLoadOnSuccess = (listFromServer) => {
-    // дополнить список корзины данными по товарам: name, price, stock, discount
-    /* setCartExtended(cart.map((item) => {
-      const itemFromServer = listFromServer.find((itemFind) => itemFind._id === item.id)
-      return {
-        ...item,
-        price: itemFromServer.price,
-        discount: itemFromServer.discount,
-        stock: itemFromServer.stock,
-        name: itemFromServer.name,
-        pictures: itemFromServer.pictures,
-      }
-    })) */
+  /* const cartLoadOnSuccess = (listFromServer) => {
     const aux = cart.map((item) => {
       const itemFromServer = listFromServer.find((itemFind) => itemFind._id === item.id)
       return {
@@ -45,7 +33,7 @@ export function Cart() {
     })
     console.log({ aux })
     dispatch(cartSetExtendedFromServerAC(aux))
-  }
+  } */
 
   const cartLoadOnError = () => {
     alert('Ошибка')
@@ -75,7 +63,7 @@ export function Cart() {
   const cartClearHandler = () => {
     dispatch(cartClearAC())
   }
-
+  /*
   const cartShowHandler = () => {
     console.log({ cart })
   }
@@ -83,7 +71,7 @@ export function Cart() {
   const cartShowHandler2 = () => {
     console.log({ cartData })
   }
-
+*/
   if (!cart.length) {
     return (
       <div>
@@ -101,8 +89,7 @@ export function Cart() {
   return (
     <>
       <h2>Корзина</h2>
-      <button type="button" onClick={cartShowHandler}>Показать корзину</button>
-      <button type="button" onClick={cartShowHandler2}>Показать корзину с сервера</button>
+
       <button type="button" onClick={cartClearHandler}>Очистить корзину</button>
       <div className={cartStyles.cartContainer}>
         <div className={cartStyles.cartProductsListContainer}>
@@ -118,6 +105,13 @@ export function Cart() {
             <br />
             {`Общая стоимость: ${cartExtended.reduce((sum, item) => sum + item.quantity * Math.round(item.price * (1 - item.discount / 100)), 0)}`}
             <br />
+            <br />
+            <u>Выбрано для заказа:</u>
+            <br />
+            {`Количество единиц товаров: ${cartExtended.reduce((sum, item) => sum + item.quantity * Number(item.isForOrder), 0)}`}
+            <br />
+            {`Общая стоимость: ${cartExtended.reduce((sum, item) => sum + item.quantity * Math.round(item.price * (1 - item.discount / 100)) * Number(item.isForOrder), 0)}`}
+            <br />
           </div>
         </div>
       </div>
@@ -125,3 +119,8 @@ export function Cart() {
 
   )
 }
+
+/*
+      <button type="button" onClick={cartShowHandler}>Показать корзину</button>
+      <button type="button" onClick={cartShowHandler2}>Показать корзину с сервера</button>
+      */

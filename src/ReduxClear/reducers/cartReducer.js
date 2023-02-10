@@ -2,6 +2,7 @@ import { initialState } from '../initialState'
 import {
   CART_ADD_PRODUCT,
   CART_CHANGE_PRODUCT_QUANTITY,
+  CART_CHANGE_STATUS_FOR_ORDER,
   CART_CLEAR,
   CART_REMOVE_PRODUCT,
   CART_SET_EXTENDED_FROM_SERVER,
@@ -24,7 +25,7 @@ export const cartReducer = (state = initialState.cart, action) => {
           return item
         })
       }
-      return [action.payload, ...state]
+      return [{ ...action.payload, isForOrder: true }, ...state]
     case CART_REMOVE_PRODUCT:
       return state.filter((product) => product.id !== action.payload)
     case CART_CHANGE_PRODUCT_QUANTITY:
@@ -33,6 +34,16 @@ export const cartReducer = (state = initialState.cart, action) => {
           return {
             ...item,
             quantity: action.payload.newQuantity,
+          }
+        }
+        return item
+      })
+    case CART_CHANGE_STATUS_FOR_ORDER:
+      return state.map((item) => {
+        if (item.id === action.payload) {
+          return {
+            ...item,
+            isForOrder: !item.isForOrder,
           }
         }
         return item

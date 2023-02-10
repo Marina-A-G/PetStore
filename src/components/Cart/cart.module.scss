@@ -88,16 +88,30 @@ $borderRadius: 20px;
 }
 
 .cartButtonActive {
+    width: 20px;
+    height: 20px;
     background-color: $colorLightMain;
     color: $colorDarkMain;
     border: solid $colorDarkMain 1px;
-    border-radius: 10px;
+    border-radius: 1px;
 }
 
 .cartButtonNonActive {
+    width: 20px;
+    height: 20px;
     background-color: lightgrey;
     color: $colorDarkMain;
     border: solid gray 1px;
-    border-radius: 10px;
+    border-radius: 1px;
 
+}
+
+.cartForOrder {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: white;
+    color: $colorDarkMain;
+    border: solid $colorDarkMain 2px;
+    border-radius: 5px;
 }

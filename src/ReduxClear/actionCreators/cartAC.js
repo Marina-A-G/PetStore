@@ -1,6 +1,7 @@
 import {
   CART_ADD_PRODUCT,
   CART_CHANGE_PRODUCT_QUANTITY,
+  CART_CHANGE_STATUS_FOR_ORDER,
   CART_CLEAR, CART_REMOVE_PRODUCT,
   CART_SET_EXTENDED_FROM_SERVER,
 } from '../types/cartTypes'
@@ -33,4 +34,9 @@ export const cartClearAC = () => ({
 export const cartSetExtendedFromServerAC = (cartExtended) => ({
   type: CART_SET_EXTENDED_FROM_SERVER,
   payload: cartExtended,
+})
+
+export const cartChangeStatusForOrderAC = (id) => ({
+  type: CART_CHANGE_STATUS_FOR_ORDER,
+  payload: id,
 })

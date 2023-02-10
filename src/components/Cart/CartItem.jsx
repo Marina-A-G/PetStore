@@ -1,8 +1,10 @@
+/* eslint-disable max-len */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import { useDispatch } from 'react-redux'
 import {
   cartChangeProductQuantityAC,
+  cartChangeStatusForOrderAC,
   cartRemoveProductAC,
 } from '../../ReduxClear/actionCreators/cartAC'
 import cartStyles from './cart.module.scss'
@@ -27,15 +29,26 @@ export function CartItem({ item }) {
     dispatch(cartRemoveProductAC(item._id))
   }
 
+  const changeStatusForOrderHandler = () => {
+    dispatch(cartChangeStatusForOrderAC(item._id))
+  }
+
   return (
     <div className={cartStyles.cartItemContainer}>
+      <div className={cartStyles.cartForOrder}>
+        <input
+          type="checkbox"
+          checked={item.isForOrder}
+          onClick={changeStatusForOrderHandler}
+        />
+      </div>
       <img src={item.pictures} alt={item.name} className={cartStyles.cartItemPicture} />
 
       <div className={cartStyles.cartItemName}>{item.name}</div>
       <div className={cartStyles.cartItemQuantityBlock}>
         <button
           type="button"
-          className={cartStyles.cartButton}
+          className={item.quantity > 1 ? cartStyles.cartButtonActive : cartStyles.cartButtonNonActive}
           onClick={decreaseQuantityHandler}
         >
           -
@@ -50,7 +63,7 @@ export function CartItem({ item }) {
         />
         <button
           type="button"
-          className={cartStyles.cartButton}
+          className={item.quantity < item.stock ? cartStyles.cartButtonActive : cartStyles.cartButtonNonActive}
           onClick={increaseQuantityHandler}
         >
           +

@@ -42,8 +42,6 @@ export function SearchBar() {
   useEffect(() => {
     console.log(debounceValue)
     getSearchedProdsHandler(debounceValue)
-    // navigate('products/')
-    console.log('здесь пойдет запросб юзМутэйт и навигация на страницу продуктов')
   }, [debounceValue])
 
   return (
