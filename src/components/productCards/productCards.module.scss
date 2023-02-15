@@ -51,6 +51,10 @@ $colorLightMain: #ffe4b5;
     color: $colorDarkMain;
     border: solid $colorDarkMain 2px;
     border-radius: 3px;
+
+    &:hover {
+        box-shadow: 3px 3px 20px $colorDarkMain;
+    }
 }
 
 .cardCartInput {

@@ -66,6 +66,8 @@ root.render(
 создаем query-клиента и оборачиваем в него все приложение
 */
 
+// при Redux Toolkit     <Provider store={store}> и его импорт остаются такими же, то есть при переходе с Redux на Redux Toolkit файл index.js менять не нужно
+
 /*
   <React.StrictMode>
     <RouterProvider router={router} />

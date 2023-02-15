@@ -9,5 +9,6 @@ export const initialState = {
 
 export const getInitialState = () => {
   const tokenLS = api.checkTokenAvailabilityInLS()
-  return { cart: [], token: tokenLS, products: [] }
+  const cartLS = api.checkCartAvailabilityInLS()
+  return { cart: cartLS, token: tokenLS, products: [] }
 }

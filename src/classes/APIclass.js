@@ -174,6 +174,14 @@ class APIforPetStore {
     if (!tokenObj.token) return '' // проверка на наличие поля token в записи в LS
     return tokenObj.token
   }
+
+  checkCartAvailabilityInLS() {
+    const cartObjFromLS = localStorage.getItem(TokenLSkey)
+    if (!cartObjFromLS) return [] // проверка на наличие записи в LS
+    const cartObj = JSON.parse(cartObjFromLS)
+    if (!cartObj.cart) return [] // проверка на наличие поля token в записи в LS
+    return cartObj.cart
+  }
 }
 
 export const api = new APIforPetStore()
