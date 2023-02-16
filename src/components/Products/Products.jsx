@@ -4,12 +4,9 @@ import { useNavigate } from 'react-router-dom'
 import { useQuery } from '@tanstack/react-query'
 import { useDispatch, useSelector } from 'react-redux'
 import { api } from '../../classes/APIclass'
-// import { Link } from 'react-router-dom'
-// import { ProductsContext } from '../../contexts/ProductsContext'
 import { ProductCards } from '../productCards/ProductCards'
 import prodStyles from './products.module.scss'
-import { TokenLSkey } from '../../utils/constants'
-import { productsSetAC } from '../../ReduxClear/actionCreators/productsAC'
+import { productsSet } from '../../ReduxToolkit/slices/productSlice'
 
 export const allProductsQueryKey = 'allProducts'
 const URLbase = 'https://api.react-learning.ru/'
@@ -32,7 +29,7 @@ export function Products() {
   }, [])
 
   const getAllProductsSuccess = (prods) => {
-    dispatch(productsSetAC(prods))
+    dispatch(productsSet(prods))
   }
 
   const { data, isLoading } = useQuery({
@@ -55,7 +52,7 @@ export function Products() {
     <div className={prodStyles.pageContainer}>
 
       {isLoading ? <p>Грузимся</p>
-        : <ProductCards products={products} />}
+        : <ProductCards products={products.products} />}
     </div>
   )
 }

@@ -3,10 +3,10 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import { useDispatch } from 'react-redux'
 import {
-  cartChangeProductQuantityAC,
-  cartChangeStatusForOrderAC,
-  cartRemoveProductAC,
-} from '../../ReduxClear/actionCreators/cartAC'
+  cartChangeProductQuantity,
+  cartChangeProductStatusForOrder,
+  cartRemoveProduct,
+} from '../../ReduxToolkit/slices/cartSlice'
 import cartStyles from './cart.module.scss'
 // import picDelete from './iconDelete.png'
 
@@ -15,22 +15,22 @@ export function CartItem({ item }) {
 
   const increaseQuantityHandler = () => {
     if (item.quantity < item.stock) {
-      dispatch(cartChangeProductQuantityAC(item._id, item.quantity + 1))
+      dispatch(cartChangeProductQuantity(item.id, item.quantity + 1))
     }
   }
 
   const decreaseQuantityHandler = () => {
     if (item.quantity > 1) {
-      dispatch(cartChangeProductQuantityAC(item._id, item.quantity - 1))
+      dispatch(cartChangeProductQuantity(item.id, item.quantity - 1))
     }
   }
 
   const deleteProductHandler = () => {
-    dispatch(cartRemoveProductAC(item._id))
+    dispatch(cartRemoveProduct(item.id))
   }
 
   const changeStatusForOrderHandler = () => {
-    dispatch(cartChangeStatusForOrderAC(item._id))
+    dispatch(cartChangeProductStatusForOrder(item.id))
   }
 
   return (

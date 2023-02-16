@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { api } from '../../classes/APIclass'
 import { useDebounce } from '../../customHooks/useDebounce'
-import { productsSetAC } from '../../ReduxClear/actionCreators/productsAC'
+import { productsSet } from '../../ReduxToolkit/slices/productSlice'
 import searchStyles from './searchBar.module.scss'
 
 export function SearchBar() {
@@ -16,7 +16,7 @@ export function SearchBar() {
   const navigate = useNavigate()
 
   const getSearchedProductsSuccess = (prods) => {
-    dispatch(productsSetAC(prods))
+    dispatch(productsSet(prods))
   }
 
   const { mutateAsync: getSearchedProdsHandler } = useMutation({

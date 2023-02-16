@@ -11,7 +11,7 @@ import regStyles from './registration.module.scss'
 import { useUserContext } from '../../contexts/UserContext'
 import { api } from '../../classes/APIclass'
 import { TokenLSkey } from '../../utils/constants'
-import { tokenAddAC } from '../../ReduxClear/actionCreators/tokenAC'
+import { tokenAdd } from '../../ReduxToolkit/slices/tokenSlice'
 
 const ERROR_MESSAGE = 'Надо заполнить!'
 
@@ -32,7 +32,7 @@ export function Registration() {
       }
       console.log({ LSdata })
       localStorage.setItem(TokenLSkey, JSON.stringify(LSdata))
-      dispatch(tokenAddAC(responseAuth.token))
+      dispatch(tokenAdd(responseAuth.token))
       navigate('/user/')
     })
       .catch((errMessage) => alert(`Ошибка:  ${errMessage}.`))

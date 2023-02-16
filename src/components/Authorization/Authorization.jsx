@@ -6,16 +6,13 @@ import {
 } from 'formik'
 import * as Yup from 'yup'
 import {
-  useQuery,
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query'
 import { useDispatch } from 'react-redux'
 import authStyles from './authorization.module.scss'
-import { useUserContext } from '../../contexts/UserContext'
-import { TokenLSkey } from '../../utils/constants'
 import { api } from '../../classes/APIclass'
-import { tokenAddAC } from '../../ReduxClear/actionCreators/tokenAC'
+import { tokenAdd } from '../../ReduxToolkit/slices/tokenSlice'
 
 const ERROR_MESSAGE = 'Надо заполнить!'
 
@@ -26,7 +23,7 @@ export function Authorization() {
   const dispatch = useDispatch()
 
   const userAuthSuccess = (response) => {
-    dispatch(tokenAddAC(response.token))
+    dispatch(tokenAdd(response.token))
     navigate('products/')
   }
 

@@ -1,10 +1,31 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { getInitialState } from '../../ReduxClear/initialState'
+import { getInitialState } from '../initialState'
 
-export const tokenSlice = createSlice({
-  name: 'token',
+const tokenSlice = createSlice({
+  // вот это вот все, что передается в функцию, называется "объект настроек"
+  name: 'token', // уникальное имя, не должны пересекаться, строка
   initialState: getInitialState().token,
   reducers: {
-
-  },
+    tokenAdd(state, action) {
+      return action.payload
+    },
+    tokenDelete() {
+      return ''
+    },
+  }, // объект, в котором указаны ключи, их мб неограниченное количество
 })
+
+// создавая срез, мы получаем 1) набор action'ов, 2) готовый reducer
+
+export const { tokenAdd, tokenDelete } = tokenSlice.actions
+
+// export default tokenSlice.reducer создатели библиотеки предлагают вот так, но можно и не дефолтным
+export const tokenReducer = tokenSlice.reducer
+
+/* фишка тулкита в том, что мы можем наше состояние мутировать.
+Под капотом тулкита есть библиотека immerJS.
+То есть, Redux как требовал иммутабельности при обновлении состояния, так и требует, но библиотека заботится о том, чтобы мутации стали иммутабельны для Redux
+Так что теперь можем мутировать массивы, изменять только необходимые поля в объектах. Но можем и по-старинке
+Главное: в одном редьюсере нельзя смешивать 2 подхода, либо полностью иммутабельный, либо только с мутациями
+Работая с примитивами, в любом случае должны возвращать. Так как, например, числа не могут мутироваться, они иммутабельны по своей природе
+*/

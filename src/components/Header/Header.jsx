@@ -6,8 +6,8 @@ import picCart from './CatLogo2.png'
 import picUser from './user02.png'
 import picExit from './exit02.png'
 import { TokenLSkey } from '../../utils/constants'
-import { tokenDeleteAC } from '../../ReduxClear/actionCreators/tokenAC'
-import { cartClearAC } from '../../ReduxClear/actionCreators/cartAC'
+import { cartClear } from '../../ReduxToolkit/slices/cartSlice'
+import { tokenDelete } from '../../ReduxToolkit/slices/tokenSlice'
 
 function Header() {
   // console.log('header render')
@@ -19,8 +19,8 @@ function Header() {
     navigate('products/')
   }
   const exitClickHandler = () => {
-    dispatch(cartClearAC())
-    dispatch(tokenDeleteAC())
+    dispatch(cartClear())
+    dispatch(tokenDelete())
     navigate('/')
   }
 

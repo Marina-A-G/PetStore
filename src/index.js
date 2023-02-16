@@ -11,7 +11,7 @@ import { Registration } from './components/Registration/Registration'
 import { UserData } from './components/UserData/UserData'
 import { UserEdit } from './components/UserEdit/UserEdit'
 import { Cart } from './components/Cart/Cart'
-import { store } from './ReduxClear/store'
+import { store } from './ReduxToolkit/store'
 // import reportWebVitals from './reportWebVitals'
 
 const queryClient = new QueryClient()

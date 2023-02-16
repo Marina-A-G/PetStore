@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import { useDispatch } from 'react-redux'
-import { cartAddProductAC } from '../../ReduxClear/actionCreators/cartAC'
+import { cartAddProduct } from '../../ReduxToolkit/slices/cartSlice'
 import cardStyles from './productCards.module.scss'
 
 export function ProductCard({ product }) {
@@ -11,7 +11,7 @@ export function ProductCard({ product }) {
       const quantity = Number(e.target.parentNode.children.quantity.value) <= product.stock
         ? Number(e.target.parentNode.children.quantity.value)
         : product.stock
-      dispatch(cartAddProductAC(product._id, quantity))
+      dispatch(cartAddProduct(product._id, quantity))
     }
   }
   const priceInitial = product.discount === 0 ? '' : product.price

@@ -1,43 +1,24 @@
 /* eslint-disable max-len */
 /* eslint-disable no-underscore-dangle */
-/* eslint-disable no-unused-vars */
 import { useDispatch, useSelector } from 'react-redux'
 // import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { cartClearAC, cartSetExtendedFromServerAC } from '../../ReduxClear/actionCreators/cartAC'
 import cartStyles from './cart.module.scss'
 import { CartItem } from './CartItem'
 import { api } from '../../classes/APIclass'
+import { cartClear } from '../../ReduxToolkit/slices/cartSlice'
 
 export function Cart() {
   const dispatch = useDispatch()
   const cart = useSelector((store) => store.cart)
   const token = useSelector((store) => store.token)
   const navigate = useNavigate()
-  // let cartExtended = []
-  // const [cartExtended, setCartExtended] = useState([])
-
-  /* const cartLoadOnSuccess = (listFromServer) => {
-    const aux = cart.map((item) => {
-      const itemFromServer = listFromServer.find((itemFind) => itemFind._id === item.id)
-      return {
-        ...item,
-        price: itemFromServer.price,
-        discount: itemFromServer.discount,
-        stock: itemFromServer.stock,
-        name: itemFromServer.name,
-        pictures: itemFromServer.pictures,
-      }
-    })
-    console.log({ aux })
-    dispatch(cartSetExtendedFromServerAC(aux))
-  } */
-
+  /*
   const cartLoadOnError = () => {
     alert('Ошибка')
-  }
+  } */
   // eslint-disable-next-line no-unused-vars
   const { data: cartData = [], isLoading } = useQuery({
     queryKey: ['cart', cart.map((product) => product.id)],
@@ -61,7 +42,7 @@ export function Cart() {
   }, [])
 
   const cartClearHandler = () => {
-    dispatch(cartClearAC())
+    dispatch(cartClear())
   }
   /*
   const cartShowHandler = () => {
