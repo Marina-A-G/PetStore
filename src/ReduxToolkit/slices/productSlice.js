@@ -9,8 +9,7 @@ import { PRODUCTS_STATUSES } from './productsConstants'
 export const getAllProductsFromServer = createAsyncThunk(
   'products/getAllProducts',
   // это название нужно только для инструмента разработчика, больше нигде руками его использовать не будем
-  async () => {
-    const token = useSelector((store) => store.token)
+  async (token) => {
     const response = await fetch(`${URLbase}${URLproductsAll}`, {
       // method: 'GET',
       headers: {
@@ -57,7 +56,7 @@ const productsSlice = createSlice({
       .addCase(getAllProductsFromServer.rejected, (state, action) => {
         state.status = PRODUCTS_STATUSES.failed
         console.log(action)
-        state.error = 'errorerrorerrorerrorerror'
+        state.error = action.error.message
       })
   },
 })

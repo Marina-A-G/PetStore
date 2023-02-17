@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { api } from '../../classes/APIclass'
 import { ProductCards } from '../productCards/ProductCards'
 import prodStyles from './products.module.scss'
-import { productsSet } from '../../ReduxToolkit/slices/productSlice'
+import { getAllProductsFromServer, productsSet } from '../../ReduxToolkit/slices/productSlice'
 
 export const allProductsQueryKey = 'allProducts'
 const URLbase = 'https://api.react-learning.ru/'
@@ -18,6 +18,7 @@ export function Products() {
   const dispatch = useDispatch()
 
   const token = useSelector((store) => store.token)
+  // const {products, status, error} = useSelector(getProductsSliceSelector)
   const products = useSelector((store) => store.products)
 
   useEffect(() => {
@@ -27,6 +28,8 @@ export function Products() {
       navigate('/')
     }
   }, [])
+
+  // dispatch(getAllProductsFromServer(token))
 
   const getAllProductsSuccess = (prods) => {
     dispatch(productsSet(prods))
@@ -46,6 +49,8 @@ export function Products() {
   */
 
   if (isLoading) return <p>Грузимся-грузимся</p>
+  // if (status===PRODUCTS_STATUSES.loading) return <p>Грузимся-грузимся</p>
+  // if (status===PRODUCTS_STATUSES.failed) return <><p>Ошибка {error}</p> <button onClick={()=>dispatch(getAllProductsFromServer(token))}>Refetch</button></>
   // if (!products.length) return <p>Товаров неть...</p>
 
   return (
