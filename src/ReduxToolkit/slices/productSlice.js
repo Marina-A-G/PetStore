@@ -4,8 +4,8 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { useSelector } from 'react-redux'
 import { URLbase, URLproductsAll } from '../../utils/urls'
 import { getInitialState } from '../initialState'
-import { PRODUCTS_STATUSES } from './productsConstants'
 
+/*
 export const getAllProductsFromServer = createAsyncThunk(
   'products/getAllProducts',
   // это название нужно только для инструмента разработчика, больше нигде руками его использовать не будем
@@ -25,7 +25,7 @@ export const getAllProductsFromServer = createAsyncThunk(
     return response.json()
   },
   // limit = - сколько максимум единиц хотим подгрузить
-)
+) */
 
 //---------------------------------------------------
 
@@ -34,9 +34,10 @@ const productsSlice = createSlice({
   initialState: getInitialState().products,
   reducers: {
     productsSet(state, action) {
-      state.products = action.payload
+      return action.payload
     },
   },
+  /*
   extraReducers(builder) {
     // builder - так принято называть. Можно и по-другому, но принято же
     builder
@@ -58,7 +59,7 @@ const productsSlice = createSlice({
         console.log(action)
         state.error = action.error.message
       })
-  },
+  }, */
 })
 // когда мы создали action creator getProducts... через createAsyncThunk, у него появились дополнительные поля, которые служат связью между action creator'ом b slice'ом.
 // fulfilled - будет говорить о том, что запрос выполнен успешно
@@ -66,9 +67,9 @@ const productsSlice = createSlice({
 // rejected - запрос выполнился неуспешно, произошла какая-то ошибка
 // и мы должны обрабатывать 3 кейса: стартовал, успешно, неуспешно
 
-export const getAllProductsSelector = ((store) => store.products.products)
+export const getAllProductsSelector = ((store) => store.products)
 // здесь массив продуктов
-export const getProductsSliceSelector = ((store) => store.products)
+// export const getProductsSliceSelector = ((store) => store.products)
 // здесь весь срез продуктов
 export const { productsSet } = productsSlice.actions
 

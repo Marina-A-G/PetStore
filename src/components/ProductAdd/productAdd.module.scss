@@ -1,0 +1,19 @@
+.formContainer {
+    display: flex;
+    flex-direction: column;
+    max-width: 300px;
+
+}
+
+.formField {
+    max-width: 300px;
+}
+
+.formButton {
+    width: 300px;
+    margin: 20px 0px 0px 0px;
+}
+
+.formErrorMessage {
+    color: orange;
+}

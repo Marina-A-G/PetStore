@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { api } from '../../classes/APIclass'
 import { ProductCards } from '../productCards/ProductCards'
 import prodStyles from './products.module.scss'
-import { getAllProductsFromServer, productsSet } from '../../ReduxToolkit/slices/productSlice'
+import { productsSet } from '../../ReduxToolkit/slices/productSlice'
 
 export const allProductsQueryKey = 'allProducts'
 const URLbase = 'https://api.react-learning.ru/'
@@ -57,7 +57,7 @@ export function Products() {
     <div className={prodStyles.pageContainer}>
 
       {isLoading ? <p>Грузимся</p>
-        : <ProductCards products={products.products} />}
+        : <ProductCards products={products} />}
     </div>
   )
 }

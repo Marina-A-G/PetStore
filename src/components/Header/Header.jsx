@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { SearchBar } from '../SearchBar/SearchBar'
 import headerStyles from './header.module.scss'
 import picCart from './CatLogo2.png'
+import picFav from './fav.png'
 import picUser from './user02.png'
 import picExit from './exit02.png'
 import { TokenLSkey } from '../../utils/constants'
@@ -14,6 +15,8 @@ function Header() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const cartQuantity = useSelector((store) => store.cart).length
+  const favQuantity = useSelector((store) => store.favourites).length
+  console.log('favQuant ', favQuantity)
 
   const catalogClickHandler = () => {
     navigate('products/')
@@ -26,7 +29,10 @@ function Header() {
 
   const cartClickHandler = () => {
     navigate('cart/')
-    // alert('Здесь будет открываться корзина... Ну, когда-нибудь...')
+  }
+
+  const favouritesClickHandler = () => {
+    navigate('favourites/')
   }
 
   const userClickHandler = () => {
@@ -68,6 +74,20 @@ function Header() {
         </button>
         {cartQuantity > 0
         && (<div className={headerStyles.cartQuantity}>{cartQuantity}</div>)}
+      </div>
+
+      <div className={headerStyles.forCart}>
+        <button
+          type="button"
+          className={headerStyles.button}
+          title="Избранное"
+          onClick={favouritesClickHandler}
+        >
+          <img src={picFav} alt="Изб" className={headerStyles.icon} />
+        </button>
+        {favQuantity > 0
+        && (<div className={headerStyles.cartQuantity}>{favQuantity}</div>)}
+
       </div>
 
       <button

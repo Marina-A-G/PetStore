@@ -161,6 +161,26 @@ class APIforPetStore {
       },
     ).then((res) => res.json())))
   }
+
+  // ADD NEW PRODUCT
+
+  async addNewProductRequest(newProductData, token) {
+    const response = await fetch(`${this.URLbase}${this.URLproductsAll}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(newProductData),
+    })
+    if (response.status > 399) {
+      const errMessage = await response.json()
+      console.log({ errMessage })
+      throw new Error(errMessage.message)
+    }
+    return response.json()
+  }
+
   /// //////////// CHECKS  ////////////////////////
   // это на случай слишком креативного пользователя:
   // 1 - если он вышел, а потом пошел сразу на страничку продуктов или данных
@@ -181,6 +201,14 @@ class APIforPetStore {
     const cartObj = JSON.parse(cartObjFromLS)
     if (!cartObj.cart) return [] // проверка на наличие поля token в записи в LS
     return cartObj.cart
+  }
+
+  checkFavouritesAvailabilityInLS() {
+    const cartObjFromLS = localStorage.getItem(TokenLSkey)
+    if (!cartObjFromLS) return [] // проверка на наличие записи в LS
+    const cartObj = JSON.parse(cartObjFromLS)
+    if (!cartObj.favourites) return [] // проверка на наличие поля token в записи в LS
+    return cartObj.favourites
   }
 }
 

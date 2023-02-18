@@ -12,6 +12,8 @@ import { UserData } from './components/UserData/UserData'
 import { UserEdit } from './components/UserEdit/UserEdit'
 import { Cart } from './components/Cart/Cart'
 import { store } from './ReduxToolkit/store'
+import { Favourites } from './components/Favourites/Favourites'
+import { ProductAdd } from './components/ProductAdd/ProductAdd'
 // import reportWebVitals from './reportWebVitals'
 
 const queryClient = new QueryClient()
@@ -44,6 +46,14 @@ const router = createBrowserRouter([
       {
         path: 'cart/',
         element: <Cart />,
+      },
+      {
+        path: 'favourites',
+        element: <Favourites />,
+      },
+      {
+        path: 'products/add',
+        element: <ProductAdd />,
       },
     ],
   },

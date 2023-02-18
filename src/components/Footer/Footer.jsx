@@ -1,11 +1,13 @@
 /* eslint-disable react/no-unescaped-entities */
 import { useState, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Modal } from '../Modal/Modal'
 import { ModalForm } from '../Modal/ModalForm'
 import footerStyles from './footer.module.scss'
 
 function Footer() {
   console.log('Footer render')
+  const navigate = useNavigate()
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const message = 'чё, правда прошло??'
@@ -17,12 +19,24 @@ function Footer() {
     setIsModalOpen(false)
   }, [])
 
+  const addProductClickHandler = () => {
+    navigate('products/add')
+  }
+
   return (
     <>
       <footer className={footerStyles.container}>
         <h1 className={footerStyles.text}>
           Это footer
         </h1>
+        <button
+          type="button"
+          className={footerStyles.button}
+          title="Пользователь"
+          onClick={addProductClickHandler}
+        >
+          Добавить новый товар
+        </button>
         <button
           type="submit"
           className={footerStyles.button}
