@@ -13,6 +13,7 @@ export function SearchBar() {
   const debounceValue = useDebounce(input, 1000)
   const dispatch = useDispatch()
   const token = useSelector((store) => store.token)
+  // eslint-disable-next-line no-unused-vars
   const navigate = useNavigate()
 
   const getSearchedProductsSuccess = (prods) => {
@@ -27,12 +28,13 @@ export function SearchBar() {
       console.log(`errMessage: ${errResp.message}, errName: ${errResp.name}`)
     },
   })
+  /*
   useEffect(() => {
     if (!token) {
       alert('Что-то мы Вас не узнаем. Авторизуйтесь, пожалуйста.')
       navigate('/')
     }
-  }, [])
+  }, []) */
 
   useEffect(() => {
     if (!input) setSearchParams(undefined)

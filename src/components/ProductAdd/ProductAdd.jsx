@@ -64,9 +64,21 @@ export function ProductAdd() {
             description: 'string, obligatory',
           }}
           validationSchema={Yup.object({
+            pictures: Yup.string(),
             name: Yup.string()
-              .max(15, 'Уложитесь в 15 символов, пожалуйста!')
               .required(ERROR_MESSAGE),
+            price: Yup.number()
+              .min(1, 'В подарок хотите отдать? И приплатить, чтобы забрали?)')
+              .required(ERROR_MESSAGE),
+            discount: Yup.number()
+              .max(99, 'Скидка не может быть больше 100%')
+              .min(0, 'Скидка не может быть отрицательной'),
+            stock: Yup.number()
+              .min(0, 'А как это у вас на складе отрицательное количество товара?'),
+            wight: Yup.string(),
+            description: Yup.string()
+              .required(ERROR_MESSAGE),
+
             about: Yup.string()
               .max(30, 'Уложитесь в 30 символов, пожалуйста!')
               .required(ERROR_MESSAGE),
@@ -80,11 +92,17 @@ export function ProductAdd() {
           }}
         >
           <Form className={prodAddStyles.formContainer}>
-            <label htmlFor="name">Имя: </label>
+            <label htmlFor="pic">URL изображения товара: </label>
+            <Field
+              id="pic"
+              className={prodAddStyles.formField}
+              name="pic"
+              type="text"
+            />
+            <label htmlFor="name">Название товара: </label>
             <Field
               id="name"
               className={prodAddStyles.formField}
-              label="Name"
               name="name"
               type="text"
             />
@@ -93,6 +111,34 @@ export function ProductAdd() {
               className={prodAddStyles.formErrorMessage}
               component="span"
             />
+            <label htmlFor="price">Цена 1 ед.: </label>
+            <Field
+              id="price"
+              className={prodAddStyles.formField}
+              name="price"
+              type="number"
+            />
+            <ErrorMessage
+              name="price"
+              className={prodAddStyles.formErrorMessage}
+              component="span"
+            />
+            <label htmlFor="discount">
+              Скидка (если скидки нет, ставьте 0):
+
+            </label>
+            <Field
+              id="discount"
+              className={prodAddStyles.formField}
+              name="discount"
+              type="number"
+            />
+            <ErrorMessage
+              name="discount"
+              className={prodAddStyles.formErrorMessage}
+              component="span"
+            />
+
             <label htmlFor="about">О себе: </label>
             <Field
               className={prodAddStyles.formField}
@@ -118,7 +164,7 @@ export function ProductAdd() {
               type="submit"
               className={prodAddStyles.formButton}
             >
-              Обновить данные обо мне!
+              Добавить товар!
             </button>
           </Form>
         </Formik>
@@ -127,7 +173,7 @@ export function ProductAdd() {
           className={prodAddStyles.formButton}
           onClick={cancelHandler}
         >
-          Не надо менять, всё и так прекрасно!
+          Что-то я передумал(а) добавлять!
         </button>
       </div>
     </>

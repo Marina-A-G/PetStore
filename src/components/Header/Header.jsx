@@ -9,6 +9,7 @@ import picExit from './exit02.png'
 import { TokenLSkey } from '../../utils/constants'
 import { cartClear } from '../../ReduxToolkit/slices/cartSlice'
 import { tokenDelete } from '../../ReduxToolkit/slices/tokenSlice'
+import { favouritesClear } from '../../ReduxToolkit/slices/favouritesSlice'
 
 function Header() {
   // console.log('header render')
@@ -16,7 +17,6 @@ function Header() {
   const dispatch = useDispatch()
   const cartQuantity = useSelector((store) => store.cart).length
   const favQuantity = useSelector((store) => store.favourites).length
-  console.log('favQuant ', favQuantity)
 
   const catalogClickHandler = () => {
     navigate('products/')
@@ -24,6 +24,7 @@ function Header() {
   const exitClickHandler = () => {
     dispatch(cartClear())
     dispatch(tokenDelete())
+    dispatch(favouritesClear())
     navigate('/')
   }
 

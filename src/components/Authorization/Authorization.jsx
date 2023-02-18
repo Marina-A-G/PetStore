@@ -9,7 +9,8 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { useEffect } from 'react'
 import authStyles from './authorization.module.scss'
 import { api } from '../../classes/APIclass'
 import { tokenAdd } from '../../ReduxToolkit/slices/tokenSlice'
@@ -21,6 +22,15 @@ export function Authorization() {
   const queryClient = useQueryClient()
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const token = useSelector((store) => store.token)
+
+  /*
+  useEffect(() => {
+    console.log('token.length ', Boolean(token.length))
+     if (token.length) {
+      navigate('/products/')
+    }
+  }, []) */
 
   const userAuthSuccess = (response) => {
     dispatch(tokenAdd(response.token))

@@ -15,6 +15,10 @@ const favouritesSlice = createSlice({
     favouritesRemoveProduct(state, action) {
       return state.filter((item) => item !== action.payload)
     },
+
+    favouritesClear() {
+      return []
+    },
   },
 })
 
@@ -23,4 +27,5 @@ export const favouritesReducer = favouritesSlice.reducer
 export const {
   favouritesAddProduct,
   favouritesRemoveProduct,
+  favouritesClear,
 } = favouritesSlice.actions
