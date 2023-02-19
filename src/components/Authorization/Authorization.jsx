@@ -24,13 +24,12 @@ export function Authorization() {
   const dispatch = useDispatch()
   const token = useSelector((store) => store.token)
 
-  /*
   useEffect(() => {
     console.log('token.length ', Boolean(token.length))
-     if (token.length) {
+    if (token.length) {
       navigate('/products/')
     }
-  }, []) */
+  }, [])
 
   const userAuthSuccess = (response) => {
     dispatch(tokenAdd(response.token))

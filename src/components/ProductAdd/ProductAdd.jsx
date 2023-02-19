@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
@@ -6,7 +7,9 @@ import {
   ErrorMessage, Field, Form, Formik,
 } from 'formik'
 import * as Yup from 'yup'
+import { useMutation } from '@tanstack/react-query'
 import prodAddStyles from './productAdd.module.scss'
+import { api } from '../../classes/APIclass'
 
 export function ProductAdd() {
   const token = useSelector((store) => store.token)
@@ -20,31 +23,31 @@ export function ProductAdd() {
     }
   }, [])
 
-  const productAddHandler = (newProdData) => {
+  /* const productAddHandler = (newProdData) => {
     console.log({ newProdData })
     const newProdFullData = {
       ...newProdData,
       available: true,
     }
     console.log({ newProdFullData })
-  }
+  } */
 
   const cancelHandler = () => {
     navigate('/products/')
   }
 
-  /*
   const { mutateAsync: productAddHandler } = useMutation({
-    mutationFn: (newProdData) => api.addNewProductRequest({...newProdData, available: true,}, token),
+    // eslint-disable-next-line max-len
+    mutationFn: (newProdData) => api.addNewProductRequest({ ...newProdData, available: true }, token),
     onSuccess: (response) => {
       console.log({ response })
       console.log('товар добавлен с id ', response._id)
-      navigate('products/')
+      navigate('/products/')
     },
     onError: (errResp) => {
       console.log(`errMessage: ${errResp.message}, errName: ${errResp.name}`)
     },
-  }) */
+  })
 
   return (
     <>
@@ -52,16 +55,15 @@ export function ProductAdd() {
       <div className="container">
         <p>Заполните данные о новом товаре:</p>
         <br />
-        <br />
         <Formik
           initialValues={{
-            pictures: 'url, string',
-            name: 'string, obligatory',
-            price: 'number, obligatory',
+            pictures: '',
+            name: '',
+            price: '',
             discount: 0,
-            stock: 'number',
-            wight: 'string',
-            description: 'string, obligatory',
+            stock: '',
+            wight: '',
+            description: '',
           }}
           validationSchema={Yup.object({
             pictures: Yup.string(),
@@ -78,25 +80,29 @@ export function ProductAdd() {
             wight: Yup.string(),
             description: Yup.string()
               .required(ERROR_MESSAGE),
-
-            about: Yup.string()
-              .max(30, 'Уложитесь в 30 символов, пожалуйста!')
-              .required(ERROR_MESSAGE),
           })}
           onSubmit={(values) => {
             // ВЫЗОВ ЗАПРОСА НА ИЗМЕНЕНИЕ ДАННЫХ ПОЛЬЗОВАТЕЛЯ
-            console.log('reg: values', { values })
+            console.log('prod: values', { values })
 
-            const newProdData = { name: values.name, about: values.about }
+            const newProdData = {
+              pictures: values.pictures,
+              name: values.name,
+              price: values.price,
+              discount: values.discount,
+              stock: values.stock,
+              wight: values.wight,
+              description: values.description,
+            }
             productAddHandler(newProdData)
           }}
         >
           <Form className={prodAddStyles.formContainer}>
-            <label htmlFor="pic">URL изображения товара: </label>
+            <label htmlFor="pictures">URL изображения товара: </label>
             <Field
-              id="pic"
+              id="pictures"
               className={prodAddStyles.formField}
-              name="pic"
+              name="pictures"
               type="text"
             />
             <label htmlFor="name">Название товара: </label>
@@ -125,7 +131,6 @@ export function ProductAdd() {
             />
             <label htmlFor="discount">
               Скидка (если скидки нет, ставьте 0):
-
             </label>
             <Field
               id="discount"
@@ -138,26 +143,42 @@ export function ProductAdd() {
               className={prodAddStyles.formErrorMessage}
               component="span"
             />
-
-            <label htmlFor="about">О себе: </label>
+            <label htmlFor="stock">
+              Количество в наличии:
+            </label>
             <Field
+              id="stock"
               className={prodAddStyles.formField}
-              label="About"
-              name="about"
-              type="text"
+              name="stock"
+              type="number"
             />
             <ErrorMessage
-              name="about"
+              name="stock"
               className={prodAddStyles.formErrorMessage}
               component="span"
             />
-            <label htmlFor="email">Адрес электронной почты: </label>
+            <label htmlFor="wight">Вес единицы товара: </label>
+            <Field
+              id="wight"
+              className={prodAddStyles.formField}
+              name="wight"
+              type="text"
+            />
+            <ErrorMessage
+              name="wight"
+              className={prodAddStyles.formErrorMessage}
+              component="span"
+            />
+            <label htmlFor="description">Описание товара: </label>
             <Field
               className={prodAddStyles.formField}
-              label="Адрес электронной почты:"
-              name="email"
-              type="email"
-              disabled
+              name="description"
+              type="text"
+            />
+            <ErrorMessage
+              name="description"
+              className={prodAddStyles.formErrorMessage}
+              component="span"
             />
             <br />
             <button
