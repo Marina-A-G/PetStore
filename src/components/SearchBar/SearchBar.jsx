@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { api } from '../../classes/APIclass'
 import { useDebounce } from '../../customHooks/useDebounce'
-import { productsSet } from '../../ReduxToolkit/slices/productSlice'
+import { productsSet } from '../../ReduxToolkit/slices/productsSlice'
 import searchStyles from './searchBar.module.scss'
 
 export function SearchBar() {

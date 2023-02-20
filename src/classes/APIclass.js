@@ -181,6 +181,24 @@ class APIforPetStore {
     return response.json()
   }
 
+  //  GET PRODUCT DATA
+
+  async getProductDataRequest(productID, token) {
+    const response = await fetch(`${this.URLbase}${this.URLproductsAll}${productID}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`,
+      },
+    })
+    if (response.status > 399) {
+      const errMessage = await response.json()
+      console.log({ errMessage })
+      throw new Error(errMessage.message)
+    }
+    return response.json()
+  }
+
   /// //////////// CHECKS  ////////////////////////
   // это на случай слишком креативного пользователя:
   // 1 - если он вышел, а потом пошел сразу на страничку продуктов или данных

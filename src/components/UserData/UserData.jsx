@@ -49,7 +49,6 @@ export function UserData() {
       {' '}
       <Link to="edit/"> измените информацию о себе.</Link>
       <br />
-      <Link to="/products/">К товарам</Link>
     </div>
   )
 }

@@ -2,19 +2,10 @@ $gridColumnWidth: 200px;
 $colorDarkMain: rgb(87, 44, 13);
 $colorLightMain: #ffe4b5;
 
-.CardsBlockContainer {
-    display: grid;
-    grid-template-columns: repeat(4, $gridColumnWidth);
-    grid-template-rows: 300px;
-    grid-gap: 40px;
-    padding: 40px;
-    padding-bottom: 120px;
-
-}
 
 .cardContainer {
-    width: 160px;
-    height: 260px;
+    width: 300px;
+    height: auto;
     background: white;
     display: flex;
     flex-direction: column;
@@ -23,6 +14,7 @@ $colorLightMain: #ffe4b5;
     box-shadow: 3px 3px 20px black;
     padding: 20px;
     position: relative;
+    margin-bottom: 70px;
 }
 
 .cardPicture {
@@ -37,11 +29,13 @@ $colorLightMain: #ffe4b5;
     color: $colorDarkMain;
     font-weight: 500;
     font-size: 15px;
+    margin: 10px 00px 10px 0px;
 }
 
 .cardName {
     color: $colorDarkMain;
-    font-size: 12px;
+    font-size: 14px;
+    margin: 10px 00px 10px 0px;
 }
 
 .cardCartButton {
@@ -68,7 +62,6 @@ $colorLightMain: #ffe4b5;
     height: 30px;
     display: flex;
     justify-content: space-between;
-    position: absolute;
     bottom: 20px;
 }
 

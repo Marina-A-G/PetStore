@@ -36,6 +36,20 @@ const productsSlice = createSlice({
     productsSet(state, action) {
       return action.payload
     },
+
+    productsSortPriceUp(state) {
+      state.sort((prod1, prod2) => (Math.round(prod1.price * (1 - prod1.discount / 100))
+      - Math.round(prod2.price * (1 - prod2.discount / 100))))
+    },
+
+    productsSortPriceDown(state) {
+      state.sort((prod1, prod2) => (Math.round(prod2.price * (1 - prod2.discount / 100))
+      - Math.round(prod1.price * (1 - prod1.discount / 100))))
+    },
+
+    productsSortOnlyDiscount(state) {
+      return state.filter((product) => product.discount > 0)
+    },
   },
   /*
   extraReducers(builder) {
@@ -71,7 +85,12 @@ export const getAllProductsSelector = ((store) => store.products)
 // здесь массив продуктов
 // export const getProductsSliceSelector = ((store) => store.products)
 // здесь весь срез продуктов
-export const { productsSet } = productsSlice.actions
+export const {
+  productsSet,
+  productsSortPriceUp,
+  productsSortPriceDown,
+  productsSortOnlyDiscount,
+} = productsSlice.actions
 
 export const productsReducer = productsSlice.reducer
 

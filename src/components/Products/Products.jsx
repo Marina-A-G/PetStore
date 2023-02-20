@@ -1,3 +1,5 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-unused-vars */
 import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
@@ -6,11 +8,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { api } from '../../classes/APIclass'
 import { ProductCards } from '../productCards/ProductCards'
 import prodStyles from './products.module.scss'
-import { productsSet } from '../../ReduxToolkit/slices/productSlice'
+import {
+  productsSet, productsSortOnlyDiscount, productsSortPriceDown, productsSortPriceUp,
+} from '../../ReduxToolkit/slices/productsSlice'
 
 export const allProductsQueryKey = 'allProducts'
-const URLbase = 'https://api.react-learning.ru/'
-const URLproductsAll = 'products/'
 
 export function Products() {
   // onsole.log('Products render')
@@ -22,14 +24,11 @@ export function Products() {
   const products = useSelector((store) => store.products)
 
   useEffect(() => {
-    // const token = api.checkTokenAvailabilityInLS()
     if (!token) {
       alert('Что-то мы Вас не узнаем. Авторизуйтесь, пожалуйста.')
       navigate('/')
     }
   }, [])
-
-  // dispatch(getAllProductsFromServer(token))
 
   const getAllProductsSuccess = (prods) => {
     dispatch(productsSet(prods))
@@ -48,6 +47,18 @@ export function Products() {
   > эта штука возвращает кучу всяких is-: isLoading, isError, isFEtched и многое другое
   */
 
+  const sortPriceUpHandler = () => {
+    dispatch(productsSortPriceUp())
+  }
+
+  const sortPriceDownHandler = () => {
+    dispatch(productsSortPriceDown())
+  }
+
+  const sortOnlyDiscountHandler = () => {
+    dispatch(productsSortOnlyDiscount())
+  }
+
   if (isLoading) return <p>Грузимся-грузимся</p>
   // if (status===PRODUCTS_STATUSES.loading) return <p>Грузимся-грузимся</p>
   // if (status===PRODUCTS_STATUSES.failed) return <><p>Ошибка {error}</p> <button onClick={()=>dispatch(getAllProductsFromServer(token))}>Refetch</button></>
@@ -55,6 +66,19 @@ export function Products() {
 
   return (
     <div className={prodStyles.pageContainer}>
+      <div className={prodStyles.sortContainer}>
+        <div className={prodStyles.sortBubbles} onClick={sortPriceUpHandler}>
+          По возрастанию цены
+        </div>
+        <div className={prodStyles.sortBubbles} onClick={sortPriceDownHandler}>
+          По убыванию цены
+
+        </div>
+        <div className={prodStyles.sortBubbles} onClick={sortOnlyDiscountHandler}>
+          Только со скидками
+
+        </div>
+      </div>
 
       {isLoading ? <p>Грузимся</p>
         : <ProductCards products={products} />}

@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { cartReducer } from './slices/cartSlice'
-import { productsReducer } from './slices/productSlice'
+import { productsReducer } from './slices/productsSlice'
 import { tokenReducer } from './slices/tokenSlice'
 import { TokenLSkey } from '../utils/constants'
 import { favouritesReducer } from './slices/favouritesSlice'

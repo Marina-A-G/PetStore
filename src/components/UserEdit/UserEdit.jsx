@@ -57,13 +57,13 @@ export function UserEdit() {
   return (
     <div className="container">
       <p>Расскажите нам о себе:</p>
-      <img src={userData.avatar} alt="Ваш аватар" width="100px" />
+      <img src={userData.avatar} alt="Ваш аватар" width="200px" />
       <br />
       <button
         type="button"
         className={ueStyles.formButton}
       >
-        Сменить аватар. (пока не жать - не работает)
+        Сменить аватар
       </button>
       <br />
       <br />

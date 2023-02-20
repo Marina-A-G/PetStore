@@ -7,14 +7,16 @@ import {
   ErrorMessage, Field, Form, Formik,
 } from 'formik'
 import * as Yup from 'yup'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import prodAddStyles from './productAdd.module.scss'
 import { api } from '../../classes/APIclass'
+import { allProductsGetQueryKey } from '../../utils/queryKeys'
 
 export function ProductAdd() {
   const token = useSelector((store) => store.token)
   const navigate = useNavigate()
   const ERROR_MESSAGE = 'Надо заполнить!'
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     if (!token) {
@@ -40,8 +42,9 @@ export function ProductAdd() {
     // eslint-disable-next-line max-len
     mutationFn: (newProdData) => api.addNewProductRequest({ ...newProdData, available: true }, token),
     onSuccess: (response) => {
-      console.log({ response })
+      // console.log({ response })
       console.log('товар добавлен с id ', response._id)
+      queryClient.invalidateQueries({ queryKey: [allProductsGetQueryKey] })
       navigate('/products/')
     },
     onError: (errResp) => {

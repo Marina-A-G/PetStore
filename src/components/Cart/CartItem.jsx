@@ -2,6 +2,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import { useDispatch } from 'react-redux'
+import { Link } from 'react-router-dom'
 import {
   cartChangeProductQuantity,
   cartChangeProductStatusForOrder,
@@ -42,9 +43,12 @@ export function CartItem({ item }) {
           onClick={changeStatusForOrderHandler}
         />
       </div>
-      <img src={item.pictures} alt={item.name} className={cartStyles.cartItemPicture} />
-
-      <div className={cartStyles.cartItemName}>{item.name}</div>
+      <Link to={`/products/${item._id}`}>
+        <img src={item.pictures} alt={item.name} className={cartStyles.cartItemPicture} />
+      </Link>
+      <Link to={`/products/${item._id}`}>
+        <div className={cartStyles.cartItemName}>{item.name}</div>
+      </Link>
       <div className={cartStyles.cartItemQuantityBlock}>
         <button
           type="button"

@@ -3,6 +3,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-underscore-dangle */
 import { useDispatch, useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 import { cartAddProduct } from '../../ReduxToolkit/slices/cartSlice'
 import cardStyles from './productCards.module.scss'
 import picFav from './heartFilled.png'
@@ -45,7 +46,10 @@ export function ProductCard({ product }) {
 
   return (
     <div className={cardStyles.cardContainer}>
-      <img src={product.pictures} alt={product.name} className={cardStyles.cardPicture} />
+
+      <Link to={`/products/${product._id}`}>
+        <img src={product.pictures} alt={product.name} className={cardStyles.cardPicture} />
+      </Link>
       {product.discount > 0
             && <div className={cardStyles.discount}>{`${product.discount}%`}</div>}
       <img
@@ -58,12 +62,15 @@ export function ProductCard({ product }) {
         <span className={cardStyles.priceInitial}>{`${priceInitial}     `}</span>
         <span className={cardStyles.priceFinal}>{`${priceFinal} р.`}</span>
       </div>
-      <div className={cardStyles.cardName}>
-        {product.name}
-      </div>
-      <div className={cardStyles.cardName}>
-        {`В наличии: ${product.stock}`}
-      </div>
+      <Link to={`/products/${product._id}`}>
+        <div className={cardStyles.cardName}>
+          {product.name}
+        </div>
+        <div className={cardStyles.cardName}>
+          {`В наличии: ${product.stock}`}
+        </div>
+      </Link>
+
       <div className={cardStyles.cardCartElementsContainer}>
         <input
           name="quantity"

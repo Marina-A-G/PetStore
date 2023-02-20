@@ -6,7 +6,7 @@ import { ModalForm } from '../Modal/ModalForm'
 import footerStyles from './footer.module.scss'
 
 function Footer() {
-  console.log('Footer render')
+  // console.log('Footer render')
   const navigate = useNavigate()
 
   const [isModalOpen, setIsModalOpen] = useState(false)
@@ -26,9 +26,9 @@ function Footer() {
   return (
     <>
       <footer className={footerStyles.container}>
-        <h1 className={footerStyles.text}>
-          Это footer
-        </h1>
+        <h2 className={footerStyles.text}>
+          Хрум-чавк!
+        </h2>
         <button
           type="button"
           className={footerStyles.button}
@@ -41,6 +41,7 @@ function Footer() {
           type="submit"
           className={footerStyles.button}
           onClick={openModal}
+          hidden
         >
           Кнопка. Для модалки. "Тест" и "Не трогать" :)
         </button>

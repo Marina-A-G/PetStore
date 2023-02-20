@@ -1,5 +1,34 @@
+$colorDarkMain: rgb(87, 44, 13);
+$colorLightMain: #ffe4b5;
+$colorAccent: rgb(255, 255, 100);
+
 .pageContainer {
     display: flex;
     flex-direction: column;
     background-color: #ffe4b5;
+}
+
+.sortContainer {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+}
+
+.sortBubbles {
+    height: 20px;
+    background: $colorLightMain;
+    border: solid 3px $colorDarkMain;
+    border-radius: 30%;
+    padding: 2px;
+    background-image: inherit;
+    color: $colorDarkMain;
+    margin: 10px 5px 10px 5px;
+    font-size: 10pt;
+    font-weight: 700;
+    text-align: center;
+    box-shadow: 1px 1px 10px $colorDarkMain;
+
+    &:hover {
+        box-shadow: 3px 3px 20px $colorDarkMain;
+    }
 }
