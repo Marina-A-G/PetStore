@@ -23,11 +23,11 @@ export function Products() {
   const dispatch = useDispatch()
   const [searchParams, setSearchParams] = useSearchParams()
   const queryClient = useQueryClient()
+  let urlTemp = {}
 
   const token = useSelector((store) => store.token)
   const products = useSelector((store) => store.products)
   const urlParams = useSelector((store) => store.url)
-  const urlTemp = {}
 
   const sortPriceUpHandler = () => {
     dispatch(productsSortPriceUp())
@@ -60,33 +60,53 @@ export function Products() {
       navigate('/')
     }
     console.log('urlParams from useEffect ', urlParams)
+    //-----------------------------------------------------
     switch (urlParams.sort) {
       case SORT.priceDown:
         dispatch(sortAdd(SORT.priceDown))
         dispatch(productsSortPriceDown())
+        urlTemp = { sort: SORT.priceDown }
         break
       case SORT.priceUp:
         dispatch(sortAdd(SORT.priceUp))
         dispatch(productsSortPriceUp())
+        urlTemp = { sort: SORT.priceUp }
         break
       default: break
     }
+    if (urlParams.filter === FILTER.onlyDiscounts) {
+      dispatch(filterAdd(FILTER.onlyDiscounts))
+      dispatch(productsSortOnlyDiscount())
+      urlTemp = { ...urlTemp, filter: FILTER.onlyDiscounts }
+    }
+    setSearchParams(urlTemp)
+  //----------------------------------------------
   }, [])
 
   const getAllProductsSuccess = (prods) => {
     dispatch(productsSet(prods))
     console.log('urlParams from request ', urlParams)
+    //-----------------------------------------------------
     switch (urlParams.sort) {
       case SORT.priceDown:
         dispatch(sortAdd(SORT.priceDown))
         dispatch(productsSortPriceDown())
+        urlTemp = { sort: SORT.priceDown }
         break
       case SORT.priceUp:
         dispatch(sortAdd(SORT.priceUp))
         dispatch(productsSortPriceUp())
+        urlTemp = { sort: SORT.priceUp }
         break
       default: break
     }
+    if (urlParams.filter === FILTER.onlyDiscounts) {
+      dispatch(filterAdd(FILTER.onlyDiscounts))
+      dispatch(productsSortOnlyDiscount())
+      urlTemp = { ...urlTemp, filter: FILTER.onlyDiscounts }
+    }
+    setSearchParams(urlTemp)
+    //----------------------------------------------
   }
 
   const { data, isLoading } = useQuery({

@@ -1,10 +1,11 @@
 $gridColumnWidth: 200px;
 $colorDarkMain: rgb(87, 44, 13);
 $colorLightMain: #ffe4b5;
+$widthContent: 300px;
 
 
 .cardContainer {
-    width: 300px;
+    width: $widthContent;
     height: auto;
     background: white;
     display: flex;
@@ -14,7 +15,6 @@ $colorLightMain: #ffe4b5;
     box-shadow: 3px 3px 20px black;
     padding: 20px;
     position: relative;
-    margin-bottom: 70px;
 }
 
 .cardPicture {
@@ -96,6 +96,31 @@ $colorLightMain: #ffe4b5;
     top: 10px;
 }
 
+.commentContainer {
+    width: $widthContent;
+    height: auto;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+    border: 2px solid rgb(87, 44, 13);
+    box-shadow: 3px 3px 20px black;
+    padding: 5px 20px 5px 20px;
+    position: relative;
+}
+
+.commentAuthor {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.commentText {
+    font-size: 14px;
+}
+
+.marginBottom {
+    height: 90px;
+}
 
 @media only screen and (max-width: 1000px) {
     .CardsBlockContainer {

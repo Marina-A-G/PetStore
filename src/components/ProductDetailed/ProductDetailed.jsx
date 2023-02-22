@@ -16,6 +16,7 @@ import picFav from './heartFilled.png'
 import picNotFav from './heartOutline.png'
 import { cartAddProduct } from '../../ReduxToolkit/slices/cartSlice'
 import { userDataGetQueryKey } from '../../utils/queryKeys'
+import { CommentItem } from './CommentItem'
 
 export function ProductDetailed() {
   const { productID } = useParams()
@@ -43,9 +44,7 @@ export function ProductDetailed() {
   const { data: productData, isLoading: isLoadingProduct } = useQuery({
     queryKey: [productID],
     queryFn: () => api.getProductDataRequest(productID, token),
-    onSuccess: (response) => {
-      console.log('response product ', response)
-    },
+    onSuccess: (response) => { console.log('response product ', response) },
     onError: (errResp) => {
       console.log(`errMessage: ${errResp.message}, errName: ${errResp.name}`)
     },
@@ -54,9 +53,7 @@ export function ProductDetailed() {
   const { data: userData, isLoading: isLoadingUser } = useQuery({
     queryKey: [userDataGetQueryKey],
     queryFn: () => api.getUserDataRequest(token),
-    onSuccess: (response) => {
-      console.log('response USer ', response)
-    },
+    // onSuccess: (response) => {       console.log('response USer ', response)     },
     onError: (errResp) => {
       console.log(`errMessage: ${errResp.message}, errName: ${errResp.name}`)
     },
@@ -151,11 +148,78 @@ export function ProductDetailed() {
 
           </button>
         </div>
-
       </div>
+      <p>Отзывы:</p>
+      <div>
+        {productData.reviews.map((comment) => <CommentItem key={comment._id} comment={comment} />)}
+      </div>
+      <div className={prodStyles.marginBottom} />
     </>
   )
 }
+/*
+reviews
+:
+Array(28)
+0
+:
+author
+:
+"638e460d59b98b038f779d98"
+created_at
+:
+"2023-01-31T12:06:09.318Z"
+product
+:
+"622c779c77d63f6e70967d1c"
+rating
+:
+5
+text
+:
+"nice"
+updated_at
+:
+"2023-01-31T12:06:09.318Z"
+__v
+:
+0
+_id
+:
+"63d9043159b98b038f77aef7"
+[[Prototype]]
+:
+Object
+1
+:
+author
+:
+"63d97ea559b98b038f77af3a"
+created_at
+:
+"2023-01-31T20:50:01.811Z"
+product
+:
+"622c779c77d63f6e70967d1c"
+rating
+:
+5
+text
+:
+"Вкуснятина, собака сказала"
+updated_at
+:
+"2023-01-31T20:50:01.811Z"
+__v
+:
+0
+_id
+:
+"63d97ef959b98b038f77af3c"
+[[Prototype]]
+:
+Object
+*/
 
 /*
 author

@@ -18,6 +18,7 @@ export function SearchBar() {
 
   const getSearchedProductsSuccess = (prods) => {
     dispatch(productsSet(prods))
+    console.log('prodSet from SearchBar')
   }
 
   const { mutateAsync: getSearchedProdsHandler } = useMutation({
@@ -42,8 +43,8 @@ export function SearchBar() {
   }, [input])
 
   useEffect(() => {
-    console.log(debounceValue)
-    getSearchedProdsHandler(debounceValue)
+    console.log('debounce value', debounceValue)
+    if (debounceValue) getSearchedProdsHandler(debounceValue)
   }, [debounceValue])
 
   return (
