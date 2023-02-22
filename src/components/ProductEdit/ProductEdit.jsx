@@ -1,22 +1,24 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import {
   ErrorMessage, Field, Form, Formik,
 } from 'formik'
 import * as Yup from 'yup'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import prodAddStyles from './productAdd.module.scss'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import prodAddStyles from './productEdit.module.scss'
 import { api } from '../../classes/APIclass'
 import { allProductsGetQueryKey } from '../../utils/queryKeys'
 
-export function ProductAdd() {
+export function ProductEdit() {
   const token = useSelector((store) => store.token)
   const navigate = useNavigate()
   const ERROR_MESSAGE = 'Надо заполнить!'
   const queryClient = useQueryClient()
+  const { productID } = useParams()
 
   useEffect(() => {
     if (!token) {
@@ -29,35 +31,48 @@ export function ProductAdd() {
     navigate('/products/')
   }
 
-  const { mutateAsync: productAddHandler } = useMutation({
-    // eslint-disable-next-line max-len
-    mutationFn: (newProdData) => api.addNewProductRequest({ ...newProdData, available: true }, token),
+  const { data: productData, isLoading } = useQuery({
+    queryKey: [productID],
+    queryFn: () => api.getProductDataRequest(productID, token),
     onSuccess: (response) => {
-      // console.log({ response })
-      console.log('товар добавлен с id ', response._id)
-      queryClient.invalidateQueries({ queryKey: [allProductsGetQueryKey] })
-      navigate('/products/')
+      console.log(response)
     },
     onError: (errResp) => {
       console.log(`errMessage: ${errResp.message}, errName: ${errResp.name}`)
     },
   })
 
+  const { mutateAsync: productEditHandler } = useMutation({
+    // eslint-disable-next-line max-len
+    mutationFn: (updProdData) => api.editProductDataRequest(updProdData, productID, token),
+    onSuccess: (response) => {
+      // console.log({ response })
+      console.log('изменены данные товара с id', response._id)
+      queryClient.invalidateQueries({ queryKey: [allProductsGetQueryKey, productID] })
+      navigate(`/products/${productID}`)
+    },
+    onError: (errResp) => {
+      console.log(`errMessage: ${errResp.message}, errName: ${errResp.name}`)
+    },
+  })
+
+  if (isLoading) return <p>Уточняем данные...</p>
+
   return (
     <>
-      <h1>Добавление нового товара:</h1>
+      <h1>Изменение данных о товаре</h1>
       <div className="container">
-        <p>Заполните данные о новом товаре:</p>
+        <p>Поменяйте данные о товаре:</p>
         <br />
         <Formik
           initialValues={{
-            pictures: '',
-            name: '',
-            price: '',
-            discount: 0,
-            stock: '',
-            wight: '',
-            description: '',
+            pictures: productData.pictures,
+            name: productData.name,
+            price: productData.price,
+            discount: productData.discount,
+            stock: productData.stock,
+            wight: productData.wight,
+            description: productData.description,
           }}
           validationSchema={Yup.object({
             pictures: Yup.string(),
@@ -88,7 +103,7 @@ export function ProductAdd() {
               wight: values.wight,
               description: values.description,
             }
-            productAddHandler(newProdData)
+            productEditHandler(newProdData)
           }}
         >
           <Form className={prodAddStyles.formContainer}>
@@ -179,7 +194,7 @@ export function ProductAdd() {
               type="submit"
               className={prodAddStyles.formButton}
             >
-              Добавить товар!
+              Обновить данные!
             </button>
           </Form>
         </Formik>
@@ -188,7 +203,7 @@ export function ProductAdd() {
           className={prodAddStyles.formButton}
           onClick={cancelHandler}
         >
-          Что-то я передумал(а) добавлять!
+          Что-то я передумал(а) менять!
         </button>
       </div>
     </>

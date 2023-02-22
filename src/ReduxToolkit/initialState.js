@@ -5,16 +5,19 @@ export const initialState = {
   token: '',
   products: [],
   favourites: [],
+  url: { sort: '', filter: '' },
 }
 
 export const getInitialState = () => {
   const tokenLS = api.checkTokenAvailabilityInLS()
   const cartLS = api.checkCartAvailabilityInLS()
   const favouritesLS = api.checkFavouritesAvailabilityInLS()
+  const urlLS = api.checkUrlParamsAvailabilityInLS()
   return {
     cart: cartLS,
     token: tokenLS,
     products: [],
     favourites: favouritesLS,
+    url: urlLS,
   }
 }

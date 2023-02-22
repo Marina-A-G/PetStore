@@ -25,7 +25,6 @@ export function Authorization() {
   const token = useSelector((store) => store.token)
 
   useEffect(() => {
-    console.log('token.length ', Boolean(token.length))
     if (token.length) {
       navigate('/products/')
     }

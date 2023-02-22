@@ -2,8 +2,8 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-unused-vars */
 import { useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
+import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useDispatch, useSelector } from 'react-redux'
 import { api } from '../../classes/APIclass'
 import { ProductCards } from '../productCards/ProductCards'
@@ -11,31 +11,86 @@ import prodStyles from './products.module.scss'
 import {
   productsSet, productsSortOnlyDiscount, productsSortPriceDown, productsSortPriceUp,
 } from '../../ReduxToolkit/slices/productsSlice'
-
-export const allProductsQueryKey = 'allProducts'
+import {
+  sortAdd, sortRemove, filterAdd, filterRemove,
+} from '../../ReduxToolkit/slices/urlSlice'
+import { allProductsGetQueryKey } from '../../utils/queryKeys'
+import { FILTER, SORT } from '../../utils/constants'
 
 export function Products() {
   // onsole.log('Products render')
   const navigate = useNavigate()
   const dispatch = useDispatch()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const queryClient = useQueryClient()
 
   const token = useSelector((store) => store.token)
-  // const {products, status, error} = useSelector(getProductsSliceSelector)
   const products = useSelector((store) => store.products)
+  const urlParams = useSelector((store) => store.url)
+  const urlTemp = {}
+
+  const sortPriceUpHandler = () => {
+    dispatch(productsSortPriceUp())
+    dispatch(sortAdd(SORT.priceUp))
+    setSearchParams({ sort: SORT.priceUp, filter: urlParams.filter })
+  }
+
+  const sortPriceDownHandler = () => {
+    dispatch(productsSortPriceDown())
+    dispatch(sortAdd(SORT.priceDown))
+    setSearchParams({ sort: SORT.priceDown, filter: urlParams.filter })
+  }
+
+  const filterOnlyDiscountHandler = () => {
+    dispatch(productsSortOnlyDiscount())
+    dispatch(filterAdd(FILTER.onlyDiscounts))
+    setSearchParams({ sort: urlParams.sort, filter: FILTER.onlyDiscounts })
+  }
+
+  const sortRemoveAllHandler = () => {
+    setSearchParams(undefined)
+    dispatch(sortRemove())
+    dispatch(filterRemove())
+    queryClient.invalidateQueries({ queryKey: [allProductsGetQueryKey] })
+  }
 
   useEffect(() => {
     if (!token) {
       alert('Что-то мы Вас не узнаем. Авторизуйтесь, пожалуйста.')
       navigate('/')
     }
+    console.log('urlParams from useEffect ', urlParams)
+    switch (urlParams.sort) {
+      case SORT.priceDown:
+        dispatch(sortAdd(SORT.priceDown))
+        dispatch(productsSortPriceDown())
+        break
+      case SORT.priceUp:
+        dispatch(sortAdd(SORT.priceUp))
+        dispatch(productsSortPriceUp())
+        break
+      default: break
+    }
   }, [])
 
   const getAllProductsSuccess = (prods) => {
     dispatch(productsSet(prods))
+    console.log('urlParams from request ', urlParams)
+    switch (urlParams.sort) {
+      case SORT.priceDown:
+        dispatch(sortAdd(SORT.priceDown))
+        dispatch(productsSortPriceDown())
+        break
+      case SORT.priceUp:
+        dispatch(sortAdd(SORT.priceUp))
+        dispatch(productsSortPriceUp())
+        break
+      default: break
+    }
   }
 
   const { data, isLoading } = useQuery({
-    queryKey: [allProductsQueryKey],
+    queryKey: [allProductsGetQueryKey],
     queryFn: () => api.getAllProductsRequest(token),
     onSuccess: (response) => getAllProductsSuccess(response.products),
   })
@@ -46,27 +101,27 @@ export function Products() {
   > const {data: contacts, isLoading} - переименование data в библиотеке в contacts в коде
   > эта штука возвращает кучу всяких is-: isLoading, isError, isFEtched и многое другое
   */
-
-  const sortPriceUpHandler = () => {
-    dispatch(productsSortPriceUp())
-  }
-
-  const sortPriceDownHandler = () => {
-    dispatch(productsSortPriceDown())
-  }
-
-  const sortOnlyDiscountHandler = () => {
-    dispatch(productsSortOnlyDiscount())
-  }
+  /*
+  switch (urlParams.sort) {
+    case SORT.priceDown:
+      dispatch(sortAdd(SORT.priceDown))
+      dispatch(productsSortPriceDown())
+      break
+    case SORT.priceUp:
+      dispatch(sortAdd(SORT.priceUp))
+      dispatch(productsSortPriceUp())
+      break
+    default: break
+  } */
 
   if (isLoading) return <p>Грузимся-грузимся</p>
-  // if (status===PRODUCTS_STATUSES.loading) return <p>Грузимся-грузимся</p>
-  // if (status===PRODUCTS_STATUSES.failed) return <><p>Ошибка {error}</p> <button onClick={()=>dispatch(getAllProductsFromServer(token))}>Refetch</button></>
-  // if (!products.length) return <p>Товаров неть...</p>
 
   return (
     <div className={prodStyles.pageContainer}>
       <div className={prodStyles.sortContainer}>
+        <div className={prodStyles.sortBubbles} onClick={sortRemoveAllHandler}>
+          Все товары
+        </div>
         <div className={prodStyles.sortBubbles} onClick={sortPriceUpHandler}>
           По возрастанию цены
         </div>
@@ -74,9 +129,8 @@ export function Products() {
           По убыванию цены
 
         </div>
-        <div className={prodStyles.sortBubbles} onClick={sortOnlyDiscountHandler}>
+        <div className={prodStyles.sortBubbles} onClick={filterOnlyDiscountHandler}>
           Только со скидками
-
         </div>
       </div>
 
@@ -85,6 +139,22 @@ export function Products() {
     </div>
   )
 }
+
+/*
+  if (urlParams.sort) {
+    urlTemp = { sort: urlParams.sort }
+    dispatch(sortAdd(urlParams.sort))
+  }
+  if (urlParams.filter) {
+    urlTemp = {
+      ...urlTemp, filter: urlParams.filter,
+    }
+    dispatch(filterAdd(urlParams.filter))
+  }
+  console.log('urlTemp ', urlTemp)
+  setSearchParams(urlTemp)
+  */
+
 //       <p>{isFetching && 'Идет обновление'}</p>
 /*
 {discount: 15, stock: 10, available: true, pictures: 'https://react-learning.ru/image-compressed/1.jpg', likes: Array(38), …}

@@ -15,6 +15,7 @@ import { store } from './ReduxToolkit/store'
 import { Favourites } from './components/Favourites/Favourites'
 import { ProductAdd } from './components/ProductAdd/ProductAdd'
 import { ProductDetailed } from './components/ProductDetailed/ProductDetailed'
+import { ProductEdit } from './components/ProductEdit/ProductEdit'
 // import reportWebVitals from './reportWebVitals'
 
 const queryClient = new QueryClient()
@@ -51,6 +52,10 @@ const router = createBrowserRouter([
       {
         path: 'products/:productID/',
         element: <ProductDetailed />,
+      },
+      {
+        path: 'products/:productID/edit/',
+        element: <ProductEdit />,
       },
       {
         path: 'cart/',

@@ -199,6 +199,23 @@ class APIforPetStore {
     return response.json()
   }
 
+  async editProductDataRequest(updProductData, productID, token) {
+    const response = await fetch(`${this.URLbase}${this.URLproductsAll}${productID}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(updProductData),
+    })
+    if (response.status > 399) {
+      const errMessage = await response.json()
+      console.log({ errMessage })
+      throw new Error(errMessage.message)
+    }
+    return response.json()
+  }
+
   /// //////////// CHECKS  ////////////////////////
   // это на случай слишком креативного пользователя:
   // 1 - если он вышел, а потом пошел сразу на страничку продуктов или данных
@@ -217,7 +234,7 @@ class APIforPetStore {
     const cartObjFromLS = localStorage.getItem(TokenLSkey)
     if (!cartObjFromLS) return [] // проверка на наличие записи в LS
     const cartObj = JSON.parse(cartObjFromLS)
-    if (!cartObj.cart) return [] // проверка на наличие поля token в записи в LS
+    if (!cartObj.cart) return [] // проверка на наличие поля cart в записи в LS
     return cartObj.cart
   }
 
@@ -225,8 +242,16 @@ class APIforPetStore {
     const cartObjFromLS = localStorage.getItem(TokenLSkey)
     if (!cartObjFromLS) return [] // проверка на наличие записи в LS
     const cartObj = JSON.parse(cartObjFromLS)
-    if (!cartObj.favourites) return [] // проверка на наличие поля token в записи в LS
+    if (!cartObj.favourites) return [] // проверка на наличие поля favourites в записи в LS
     return cartObj.favourites
+  }
+
+  checkUrlParamsAvailabilityInLS() {
+    const cartObjFromLS = localStorage.getItem(TokenLSkey)
+    if (!cartObjFromLS) return { sort: '', filter: '' } // проверка на наличие записи в LS
+    const cartObj = JSON.parse(cartObjFromLS)
+    if (!cartObj.url) return { sort: '', filter: '' } // проверка на наличие поля url в записи в LS
+    return cartObj.url
   }
 }
 

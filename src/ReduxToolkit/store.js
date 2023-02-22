@@ -4,6 +4,7 @@ import { productsReducer } from './slices/productsSlice'
 import { tokenReducer } from './slices/tokenSlice'
 import { TokenLSkey } from '../utils/constants'
 import { favouritesReducer } from './slices/favouritesSlice'
+import { urlReducer } from './slices/urlSlice'
 // thunk позволяет вынести асинхроную логику внутрь actionCreator'ов
 // import {configureStore} from '@reduxjs/toolkit'
 // import tokenSlice from '/.... без {} потому что дефолтный импорт, если бы в итоге оставили дефолтный импорт
@@ -22,6 +23,7 @@ export const store = configureStore({
     token: tokenReducer,
     products: productsReducer,
     favourites: favouritesReducer,
+    url: urlReducer,
   },
 })
 
@@ -33,6 +35,7 @@ store.subscribe(() => {
     token: store.getState().token,
     cart: store.getState().cart,
     favourites: store.getState().favourites,
+    url: store.getState().url,
   }
   // console.log({ LSdata })
   localStorage.setItem(TokenLSkey, JSON.stringify(LSdata))

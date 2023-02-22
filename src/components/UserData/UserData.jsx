@@ -28,7 +28,6 @@ export function UserData() {
     onError: (errResp) => {
       console.log(`errMessage: ${errResp.message}, errName: ${errResp.name}`)
     },
-
   })
 
   if (isLoading) return <p>Уточняем данные...</p>

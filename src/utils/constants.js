@@ -10,3 +10,12 @@ export const URLproductsAll = 'products/'
 export const URLuserInfo = `v2/${group}/users/me/` // with GET method
 export const URLuserEdit = `v2/${group}/users/me` // with PATCH method
 */
+
+export const SORT = {
+  priceUp: 'sortPriceUp',
+  priceDown: 'sortPriceDown',
+}
+
+export const FILTER = {
+  onlyDiscounts: 'filterOnlyDiscounts',
+}

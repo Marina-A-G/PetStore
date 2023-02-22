@@ -15,6 +15,7 @@ import prodStyles from './productDetailed.module.scss'
 import picFav from './heartFilled.png'
 import picNotFav from './heartOutline.png'
 import { cartAddProduct } from '../../ReduxToolkit/slices/cartSlice'
+import { userDataGetQueryKey } from '../../utils/queryKeys'
 
 export function ProductDetailed() {
   const { productID } = useParams()
@@ -37,16 +38,36 @@ export function ProductDetailed() {
     }
   }, [])
 
-  const { data: productData, isLoading } = useQuery({
+  // -----  ЗАПРОСЫ К СЕРВЕРУ -----
+
+  const { data: productData, isLoading: isLoadingProduct } = useQuery({
     queryKey: [productID],
     queryFn: () => api.getProductDataRequest(productID, token),
     onSuccess: (response) => {
-      console.log(response)
+      console.log('response product ', response)
     },
     onError: (errResp) => {
       console.log(`errMessage: ${errResp.message}, errName: ${errResp.name}`)
     },
   })
+
+  const { data: userData, isLoading: isLoadingUser } = useQuery({
+    queryKey: [userDataGetQueryKey],
+    queryFn: () => api.getUserDataRequest(token),
+    onSuccess: (response) => {
+      console.log('response USer ', response)
+    },
+    onError: (errResp) => {
+      console.log(`errMessage: ${errResp.message}, errName: ${errResp.name}`)
+    },
+  })
+  //  -------------------------------------------
+
+  //  ----- ОБРАБОТЧИКИ КНОПОК  -----
+
+  const productDataEditHandler = () => {
+    navigate('edit/')
+  }
 
   const addToCartHandler = (e) => {
     // eslint-disable-next-line max-len
@@ -67,14 +88,27 @@ export function ProductDetailed() {
     }
     isFav = !isFav
   }
+  // --------------------------------------------
 
-  if (isLoading) return <p>Уточняем данные...</p>
+  //  ----- РАЗМЕТКА  -----
+
+  if (isLoadingProduct || isLoadingUser) return <p>Уточняем данные...</p>
 
   return (
     <>
       <h1>Детальная инфа о товаре</h1>
+      <div>
+        {userData._id === productData.author._id
+          && (
+          <>
+            <p>Это Ваш товар, и Вы можете поменять его инфу.</p>
+            <button type="button" onClick={productDataEditHandler}>Поменять данные о товаре</button>
+            <br />
+            <br />
+          </>
+          )}
+      </div>
       <div className={prodStyles.cardContainer}>
-
         <img src={productData.pictures} alt={productData.name} className={prodStyles.cardPicture} />
         {productData.discount > 0
       && <div className={prodStyles.discount}>{`${productData.discount}%`}</div>}
@@ -117,6 +151,7 @@ export function ProductDetailed() {
 
           </button>
         </div>
+
       </div>
     </>
   )
