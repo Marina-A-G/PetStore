@@ -17,6 +17,8 @@ class APIforPetStore {
     this.URLuserEdit = `v2/${this.group}/users/me` // with PATCH method
     this.URLproductsSearched = 'products/search?query=' // for products search. With GET method
     this.URLproductByID = 'products/' // :id - получение товра по id - GET
+    this.URLreview = 'review/' // метод PUT
+    this.URLuserById = `v2/${this.group}/users/`
   }
 
   /// ///////////////////////////  USER  ///////////////////////////
@@ -69,7 +71,6 @@ class APIforPetStore {
   //    GETTING USERDATA request
 
   async getUserDataRequest(token) {
-    // const { token } = JSON.parse(localStorage.getItem(TokenLSkey))
     const response = await fetch(`${this.URLbase}${this.URLuserInfo}`, {
       method: 'GET',
       headers: {
@@ -103,6 +104,41 @@ class APIforPetStore {
       throw new Error(errMessage.message)
     }
     return response.json()
+  }
+
+  //  GET USER DATA BY ID
+
+  // eslint-disable-next-line no-unused-vars
+  async getUserDataByID(id, token) {
+    const response = await fetch(`${this.URLbase}${this.URLuserById}${id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`,
+      },
+    })
+    if (response.status > 399) {
+      const errMessage = await response.json()
+      console.log({ errMessage })
+      throw new Error(errMessage.message)
+    }
+    return response.json()
+  }
+
+  //  GET SET OF USERS
+
+  async getUsersByIDs(ids, token) {
+    // eslint-disable-next-line max-len
+    return Promise.all(ids.map((id) => fetch(
+      `${this.URLuserById}${id}`,
+      {
+      // method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    ).then((res) => res.json())))
   }
 
   /// /////////////////////////  PRODUCTS  /////////////////////////
@@ -199,6 +235,8 @@ class APIforPetStore {
     return response.json()
   }
 
+  //  EDIT PRODUCT DATA
+
   async editProductDataRequest(updProductData, productID, token) {
     const response = await fetch(`${this.URLbase}${this.URLproductsAll}${productID}`, {
       method: 'PATCH',
@@ -214,6 +252,28 @@ class APIforPetStore {
       throw new Error(errMessage.message)
     }
     return response.json()
+  }
+
+  //  ADD COMMENT TO PRODUCT
+
+  // eslint-disable-next-line no-unused-vars
+  async addProductCommentRequest(productID, text, token) {
+    // eslint-disable-next-line max-len
+    const response = await fetch(`${this.URLbase}${this.URLproductsAll}${this.URLreview}${productID}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ text }),
+    })
+    if (response.status > 399) {
+      const errMessage = await response.json()
+      console.log({ errMessage })
+      throw new Error(errMessage.message)
+    }
+    return response.json()
+    // PUT https://api.react-learning.ru/products/review/:productId
   }
 
   /// //////////// CHECKS  ////////////////////////

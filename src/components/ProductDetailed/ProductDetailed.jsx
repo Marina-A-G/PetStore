@@ -2,7 +2,9 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable no-undef */
-import { useQuery } from '@tanstack/react-query'
+import {
+  useMutation, useQuery, useQueryClient,
+} from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -28,6 +30,7 @@ export function ProductDetailed() {
   if (favourites.indexOf(productID) === -1) {
     isFav = false
   } else isFav = true
+  const queryClient = useQueryClient()
 
   // let priceInitial
   // let priceFinal
@@ -44,7 +47,7 @@ export function ProductDetailed() {
   const { data: productData, isLoading: isLoadingProduct } = useQuery({
     queryKey: [productID],
     queryFn: () => api.getProductDataRequest(productID, token),
-    onSuccess: (response) => { console.log('response product ', response) },
+    // onSuccess: (response) => { console.log('response product ', response) },
     onError: (errResp) => {
       console.log(`errMessage: ${errResp.message}, errName: ${errResp.name}`)
     },
@@ -58,6 +61,20 @@ export function ProductDetailed() {
       console.log(`errMessage: ${errResp.message}, errName: ${errResp.name}`)
     },
   })
+
+  // eslint-disable-next-line no-unused-vars
+  const { mutateAsync: commentAdd } = useMutation({
+    // eslint-disable-next-line max-len
+    mutationFn: (commentText) => api.addProductCommentRequest(productID, commentText, token),
+    onSuccess: (response) => {
+      console.log('коммент добавлен', response)
+      queryClient.invalidateQueries({ queryKey: [productID] })
+    },
+    onError: (errResp) => {
+      console.log(`errMessage: ${errResp.message}, errName: ${errResp.name}`)
+    },
+  })
+
   //  -------------------------------------------
 
   //  ----- ОБРАБОТЧИКИ КНОПОК  -----
@@ -77,7 +94,7 @@ export function ProductDetailed() {
   }
 
   const changeFavStatusHandler = () => {
-    console.log('жмак!', productData._id, isFav)
+    // console.log('жмак!', productData._id, isFav)
     if (isFav) {
       dispatch(favouritesRemoveProduct(productData._id))
     } else {
@@ -85,11 +102,37 @@ export function ProductDetailed() {
     }
     isFav = !isFav
   }
+
+  const commentAddHandler = (event) => {
+    if (event.target.parentNode.children.commentTextarea.value) {
+      commentAdd(event.target.parentNode.children.commentTextarea.value)
+    }
+  }
   // --------------------------------------------
 
   //  ----- РАЗМЕТКА  -----
 
   if (isLoadingProduct || isLoadingUser) return <p>Уточняем данные...</p>
+  /*
+  const { data: usersData = [], isLoading: isLoadingAuthors } = useQuery({
+    queryKey: ['users', productData.reviews.map((comment) => comment.author)],
+    queryFn: () => api.getUsersByIDs(productData.reviews.map((comment) => comment.author), token),
+    // onSuccess: (response) => cartLoadOnSuccess(response),
+  })
+
+  console.log('productData: ', productData)
+  console.log('userData ', userData)
+  console.log('usersData ', usersData)
+
+  const commentsExtended = productData.reviews.map((comment) => {
+    const userFromServer = usersData.find((itemFind) => itemFind._id === comment.author)
+    return {
+      ...comment,
+      ...userFromServer,
+    }
+  })
+
+  if (isLoadingProduct || isLoadingUser || isLoadingAuthors) return <p>Уточняем данные...</p> */
 
   return (
     <>
@@ -101,6 +144,7 @@ export function ProductDetailed() {
             <p>Это Ваш товар, и Вы можете поменять его инфу.</p>
             <button type="button" onClick={productDataEditHandler}>Поменять данные о товаре</button>
             <br />
+            <div>{productData._id}</div>
             <br />
           </>
           )}
@@ -149,9 +193,25 @@ export function ProductDetailed() {
           </button>
         </div>
       </div>
+      <br />
       <p>Отзывы:</p>
+      <div className={prodStyles.reviewInputContainer}>
+        <button
+          className={prodStyles.commentButton}
+          type="button"
+          onClick={(e) => commentAddHandler(e)}
+        >
+          Добавить отзыв
+        </button>
+        <textarea className={prodStyles.commentInput} name="commentTextarea" />
+      </div>
       <div>
-        {productData.reviews.map((comment) => <CommentItem key={comment._id} comment={comment} />)}
+        {productData.reviews.map((comment) => (
+          <CommentItem
+            key={comment._id}
+            comment={comment}
+          />
+        ))}
       </div>
       <div className={prodStyles.marginBottom} />
     </>

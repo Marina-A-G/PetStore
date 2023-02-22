@@ -22,7 +22,7 @@ export function ProductCard({ product }) {
   } else isFav = true
 
   const changeFavStatusHandler = () => {
-    console.log('жмак!', product._id, isFav)
+    // console.log('жмак!', product._id, isFav)
     if (isFav) {
       dispatch(favouritesRemoveProduct(product._id))
     } else {

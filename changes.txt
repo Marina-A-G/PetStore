@@ -1,4 +1,5 @@
 Забила на этот файлик, не читаем)))
+Почитать лучше readme.txt
 
 В Products реализован лоадер на время загрузки товаров - надпись "Грузимся" [isLoading, setIsLoading]=useState(true)
 Отделены стили карточек товаров в productCards.module.scss

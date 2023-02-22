@@ -118,6 +118,25 @@ $widthContent: 300px;
     font-size: 14px;
 }
 
+.reviewInputContainer {
+    width: $widthContent;
+    height: auto;
+    display: flex;
+    flex-direction: row;
+
+}
+
+.commentInput {
+    width: 170px;
+    height: auto;
+    background: white;
+    margin: 10px 0px 20px 5px;
+}
+
+.commentButton {
+    margin: 10px 0px 20px 5px;
+}
+
 .marginBottom {
     height: 90px;
 }

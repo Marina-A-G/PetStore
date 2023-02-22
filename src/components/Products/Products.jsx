@@ -59,8 +59,8 @@ export function Products() {
       alert('Что-то мы Вас не узнаем. Авторизуйтесь, пожалуйста.')
       navigate('/')
     }
-    console.log('urlParams from useEffect ', urlParams)
     //-----------------------------------------------------
+    /*
     switch (urlParams.sort) {
       case SORT.priceDown:
         dispatch(sortAdd(SORT.priceDown))
@@ -79,13 +79,12 @@ export function Products() {
       dispatch(productsSortOnlyDiscount())
       urlTemp = { ...urlTemp, filter: FILTER.onlyDiscounts }
     }
-    setSearchParams(urlTemp)
+    setSearchParams(urlTemp) */
   //----------------------------------------------
   }, [])
 
   const getAllProductsSuccess = (prods) => {
     dispatch(productsSet(prods))
-    console.log('urlParams from request ', urlParams)
     //-----------------------------------------------------
     switch (urlParams.sort) {
       case SORT.priceDown:
