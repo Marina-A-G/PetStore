@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { useEffect } from 'react'
@@ -43,11 +42,9 @@ export function ProductEdit() {
   })
 
   const { mutateAsync: productEditHandler } = useMutation({
-    // eslint-disable-next-line max-len
     mutationFn: (updProdData) => api.editProductDataRequest(updProdData, productID, token),
-    onSuccess: (response) => {
-      // console.log({ response })
-      console.log('изменены данные товара с id', response._id)
+    onSuccess: () => {
+      // console.log('изменены данные товара с id', response._id)
       queryClient.invalidateQueries({ queryKey: [allProductsGetQueryKey, productID] })
       navigate(`/products/${productID}`)
     },

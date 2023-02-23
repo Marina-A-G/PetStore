@@ -45,7 +45,7 @@ $colorLightMain: #ffe4b5;
 }
 
 .cardCartButton {
-    width: 80px;
+    width: inherit;
     height: 30px;
     background-color: $colorLightMain;
     color: $colorDarkMain;
@@ -54,6 +54,15 @@ $colorLightMain: #ffe4b5;
 
     &:hover {
         box-shadow: 3px 3px 20px $colorDarkMain;
+    }
+}
+
+.cardCartButtonIn {
+    background-color: white;
+    color: $colorDarkMain;
+
+    &:hover {
+        box-shadow: none;
     }
 }
 

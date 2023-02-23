@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-unused-vars */
@@ -12,7 +13,7 @@ import {
   productsSet, productsSortOnlyDiscount, productsSortPriceDown, productsSortPriceUp,
 } from '../../ReduxToolkit/slices/productsSlice'
 import {
-  sortAdd, sortRemove, filterAdd, filterRemove,
+  sortAdd, sortRemove, filterAdd, filterRemove, searchRemove,
 } from '../../ReduxToolkit/slices/urlSlice'
 import { allProductsGetQueryKey } from '../../utils/queryKeys'
 import { FILTER, SORT } from '../../utils/constants'
@@ -23,6 +24,7 @@ export function Products() {
   const dispatch = useDispatch()
   const [searchParams, setSearchParams] = useSearchParams()
   const queryClient = useQueryClient()
+  const searchBarInput = document.getElementById('searchBarInput')
   let urlTemp = {}
 
   const token = useSelector((store) => store.token)
@@ -30,27 +32,35 @@ export function Products() {
   const urlParams = useSelector((store) => store.url)
 
   const sortPriceUpHandler = () => {
-    dispatch(productsSortPriceUp())
-    dispatch(sortAdd(SORT.priceUp))
-    setSearchParams({ sort: SORT.priceUp, filter: urlParams.filter })
+    if (!urlParams.q) {
+      dispatch(productsSortPriceUp())
+      dispatch(sortAdd(SORT.priceUp))
+      setSearchParams({ sort: SORT.priceUp, filter: urlParams.filter })
+    }
   }
 
   const sortPriceDownHandler = () => {
-    dispatch(productsSortPriceDown())
-    dispatch(sortAdd(SORT.priceDown))
-    setSearchParams({ sort: SORT.priceDown, filter: urlParams.filter })
+    if (!urlParams.q) {
+      dispatch(productsSortPriceDown())
+      dispatch(sortAdd(SORT.priceDown))
+      setSearchParams({ sort: SORT.priceDown, filter: urlParams.filter })
+    }
   }
 
   const filterOnlyDiscountHandler = () => {
-    dispatch(productsSortOnlyDiscount())
-    dispatch(filterAdd(FILTER.onlyDiscounts))
-    setSearchParams({ sort: urlParams.sort, filter: FILTER.onlyDiscounts })
+    if (!urlParams.q) {
+      dispatch(productsSortOnlyDiscount())
+      dispatch(filterAdd(FILTER.onlyDiscounts))
+      setSearchParams({ sort: urlParams.sort, filter: FILTER.onlyDiscounts })
+    }
   }
 
   const sortRemoveAllHandler = () => {
     setSearchParams(undefined)
     dispatch(sortRemove())
     dispatch(filterRemove())
+    dispatch(searchRemove())
+    searchBarInput.value = ''
     queryClient.invalidateQueries({ queryKey: [allProductsGetQueryKey] })
   }
 
@@ -59,52 +69,35 @@ export function Products() {
       alert('Что-то мы Вас не узнаем. Авторизуйтесь, пожалуйста.')
       navigate('/')
     }
-    //-----------------------------------------------------
-    /*
-    switch (urlParams.sort) {
-      case SORT.priceDown:
-        dispatch(sortAdd(SORT.priceDown))
-        dispatch(productsSortPriceDown())
-        urlTemp = { sort: SORT.priceDown }
-        break
-      case SORT.priceUp:
-        dispatch(sortAdd(SORT.priceUp))
-        dispatch(productsSortPriceUp())
-        urlTemp = { sort: SORT.priceUp }
-        break
-      default: break
-    }
-    if (urlParams.filter === FILTER.onlyDiscounts) {
-      dispatch(filterAdd(FILTER.onlyDiscounts))
-      dispatch(productsSortOnlyDiscount())
-      urlTemp = { ...urlTemp, filter: FILTER.onlyDiscounts }
-    }
-    setSearchParams(urlTemp) */
-  //----------------------------------------------
+    if (urlParams.q) setSearchParams({ q: urlParams.q })
   }, [])
 
   const getAllProductsSuccess = (prods) => {
     dispatch(productsSet(prods))
     //-----------------------------------------------------
-    switch (urlParams.sort) {
-      case SORT.priceDown:
-        dispatch(sortAdd(SORT.priceDown))
-        dispatch(productsSortPriceDown())
-        urlTemp = { sort: SORT.priceDown }
-        break
-      case SORT.priceUp:
-        dispatch(sortAdd(SORT.priceUp))
-        dispatch(productsSortPriceUp())
-        urlTemp = { sort: SORT.priceUp }
-        break
-      default: break
+    if (urlParams.q) setSearchParams({ q: urlParams.q })
+    else {
+      switch (urlParams.sort) {
+        case SORT.priceDown:
+          dispatch(sortAdd(SORT.priceDown))
+          dispatch(productsSortPriceDown())
+          urlTemp = { sort: SORT.priceDown }
+          break
+        case SORT.priceUp:
+          dispatch(sortAdd(SORT.priceUp))
+          dispatch(productsSortPriceUp())
+          urlTemp = { sort: SORT.priceUp }
+          break
+        default: break
+      }
+      if (urlParams.filter === FILTER.onlyDiscounts) {
+        dispatch(filterAdd(FILTER.onlyDiscounts))
+        dispatch(productsSortOnlyDiscount())
+        urlTemp = { ...urlTemp, filter: FILTER.onlyDiscounts }
+      }
+      setSearchParams(urlTemp)
     }
-    if (urlParams.filter === FILTER.onlyDiscounts) {
-      dispatch(filterAdd(FILTER.onlyDiscounts))
-      dispatch(productsSortOnlyDiscount())
-      urlTemp = { ...urlTemp, filter: FILTER.onlyDiscounts }
-    }
-    setSearchParams(urlTemp)
+
     //----------------------------------------------
   }
 
@@ -120,35 +113,32 @@ export function Products() {
   > const {data: contacts, isLoading} - переименование data в библиотеке в contacts в коде
   > эта штука возвращает кучу всяких is-: isLoading, isError, isFEtched и многое другое
   */
-  /*
-  switch (urlParams.sort) {
-    case SORT.priceDown:
-      dispatch(sortAdd(SORT.priceDown))
-      dispatch(productsSortPriceDown())
-      break
-    case SORT.priceUp:
-      dispatch(sortAdd(SORT.priceUp))
-      dispatch(productsSortPriceUp())
-      break
-    default: break
-  } */
 
   if (isLoading) return <p>Грузимся-грузимся</p>
 
   return (
     <div className={prodStyles.pageContainer}>
       <div className={prodStyles.sortContainer}>
-        <div className={prodStyles.sortBubbles} onClick={sortRemoveAllHandler}>
+        <div
+          className={`${prodStyles.sortBubbles} ${!(urlParams.sort || urlParams.filter || urlParams.q) && prodStyles.sortBubblesSelected} `}
+          onClick={sortRemoveAllHandler}
+        >
           Все товары
         </div>
-        <div className={prodStyles.sortBubbles} onClick={sortPriceUpHandler}>
+        <div
+          className={`${prodStyles.sortBubbles} ${urlParams.sort === SORT.priceUp && prodStyles.sortBubblesSelected} ${urlParams.q && prodStyles.sortBubblesBlocked}`}
+          onClick={sortPriceUpHandler}
+        >
           По возрастанию цены
         </div>
-        <div className={prodStyles.sortBubbles} onClick={sortPriceDownHandler}>
+        <div
+          className={`${prodStyles.sortBubbles} ${urlParams.sort === SORT.priceDown && prodStyles.sortBubblesSelected} ${urlParams.q && prodStyles.sortBubblesBlocked}`}
+          onClick={sortPriceDownHandler}
+        >
           По убыванию цены
 
         </div>
-        <div className={prodStyles.sortBubbles} onClick={filterOnlyDiscountHandler}>
+        <div className={`${prodStyles.sortBubbles} ${urlParams.filter === FILTER.onlyDiscounts && prodStyles.sortBubblesSelected} ${urlParams.q && prodStyles.sortBubblesBlocked}`} onClick={filterOnlyDiscountHandler}>
           Только со скидками
         </div>
       </div>
@@ -158,21 +148,6 @@ export function Products() {
     </div>
   )
 }
-
-/*
-  if (urlParams.sort) {
-    urlTemp = { sort: urlParams.sort }
-    dispatch(sortAdd(urlParams.sort))
-  }
-  if (urlParams.filter) {
-    urlTemp = {
-      ...urlTemp, filter: urlParams.filter,
-    }
-    dispatch(filterAdd(urlParams.filter))
-  }
-  console.log('urlTemp ', urlTemp)
-  setSearchParams(urlTemp)
-  */
 
 //       <p>{isFetching && 'Идет обновление'}</p>
 /*

@@ -32,3 +32,22 @@ $colorAccent: rgb(255, 255, 100);
         box-shadow: 3px 3px 20px $colorDarkMain;
     }
 }
+
+.sortBubblesSelected {
+    background: $colorDarkMain;
+    color: $colorLightMain;
+
+    &:hover {
+        box-shadow: none;
+    }
+}
+
+.sortBubblesBlocked {
+    background: $colorLightMain;
+    color: $colorLightMain;
+
+    &:hover {
+        box-shadow: none;
+    }
+
+}

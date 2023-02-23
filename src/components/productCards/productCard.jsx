@@ -16,6 +16,8 @@ import {
 export function ProductCard({ product }) {
   const dispatch = useDispatch()
   const favourites = useSelector((store) => store.favourites)
+  const cart = useSelector((store) => store.cart)
+  const isInCart = cart.find((item) => item.id === product._id)
   let isFav
   if (favourites.indexOf(product._id) === -1) {
     isFav = false
@@ -33,12 +35,12 @@ export function ProductCard({ product }) {
 
   const addToCartHandler = (productId, e) => {
     // eslint-disable-next-line max-len
-    if ((e.target.parentNode.children.quantity.value) > 0) {
+    /* if ((e.target.parentNode.children.quantity.value) > 0) {
       const quantity = Number(e.target.parentNode.children.quantity.value) <= product.stock
         ? Number(e.target.parentNode.children.quantity.value)
-        : product.stock
-      dispatch(cartAddProduct(product._id, quantity))
-    }
+        : product.stock */
+    if (!isInCart) { dispatch(cartAddProduct(product._id, 1)) }
+    // }
   }
 
   const priceInitial = product.discount === 0 ? '' : product.price
@@ -72,6 +74,20 @@ export function ProductCard({ product }) {
       </Link>
 
       <div className={cardStyles.cardCartElementsContainer}>
+
+        <button
+          type="button"
+          className={`${cardStyles.cardCartButton} ${isInCart && cardStyles.cardCartButtonIn}`}
+          onClick={(e) => addToCartHandler(product._id, e)}
+        >
+          {`${isInCart ? 'уже в корзине' : 'в корзину'}`}
+        </button>
+      </div>
+    </div>
+  )
+}
+
+/*
         <input
           name="quantity"
           type="number"
@@ -80,15 +96,4 @@ export function ProductCard({ product }) {
           className={cardStyles.cardCartInput}
           placeholder="0"
         />
-        <button
-          type="button"
-          className={cardStyles.cardCartButton}
-          onClick={(e) => addToCartHandler(product._id, e)}
-        >
-          в корзину
-
-        </button>
-      </div>
-    </div>
-  )
-}
+        */

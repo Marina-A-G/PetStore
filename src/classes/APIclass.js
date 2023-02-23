@@ -108,7 +108,6 @@ class APIforPetStore {
 
   //  GET USER DATA BY ID
 
-  // eslint-disable-next-line no-unused-vars
   async getUserDataByID(id, token) {
     const response = await fetch(`${this.URLbase}${this.URLuserById}${id}`, {
       method: 'GET',
@@ -128,7 +127,6 @@ class APIforPetStore {
   //  GET SET OF USERS
 
   async getUsersByIDs(ids, token) {
-    // eslint-disable-next-line max-len
     return Promise.all(ids.map((id) => fetch(
       `${this.URLuserById}${id}`,
       {
@@ -185,7 +183,6 @@ class APIforPetStore {
   //  GET SET OF PRODUCTS BY IDS
 
   async getProductsByIDs(ids, token) {
-    // eslint-disable-next-line max-len
     return Promise.all(ids.map((id) => fetch(
       `${this.URLbase}${this.URLproductByID}${id}`,
       {
@@ -256,7 +253,6 @@ class APIforPetStore {
 
   //  ADD COMMENT TO PRODUCT
 
-  // eslint-disable-next-line no-unused-vars
   async addProductCommentRequest(productID, text, token) {
     // eslint-disable-next-line max-len
     const response = await fetch(`${this.URLbase}${this.URLproductsAll}${this.URLreview}${productID}`, {

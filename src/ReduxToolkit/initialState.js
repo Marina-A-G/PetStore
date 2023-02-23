@@ -5,7 +5,7 @@ export const initialState = {
   token: '',
   products: [],
   favourites: [],
-  url: { sort: '', filter: '' },
+  url: { q: '', sort: '', filter: '' },
 }
 
 export const getInitialState = () => {

@@ -18,11 +18,17 @@ const urlSlice = createSlice({
     filterRemove(state) {
       state.filter = ''
     },
+    searchAdd(state, action) {
+      state.q = action.payload
+    },
+    searchRemove(state) {
+      state.q = ''
+    },
   },
 })
 
 export const {
-  sortAdd, sortRemove, filterAdd, filterRemove,
+  sortAdd, sortRemove, filterAdd, filterRemove, searchAdd, searchRemove,
 } = urlSlice.actions
 
 export const urlReducer = urlSlice.reducer

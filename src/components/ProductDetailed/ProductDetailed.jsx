@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable no-underscore-dangle */
-/* eslint-disable no-undef */
+
 import {
   useMutation, useQuery, useQueryClient,
 } from '@tanstack/react-query'
@@ -26,14 +26,14 @@ export function ProductDetailed() {
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const favourites = useSelector((store) => store.favourites)
+  const cart = useSelector((store) => store.cart)
+  const isInCart = cart.find((item) => item.id === productID)
   let isFav
   if (favourites.indexOf(productID) === -1) {
     isFav = false
   } else isFav = true
   const queryClient = useQueryClient()
-
-  // let priceInitial
-  // let priceFinal
+  const commentArea = document.getElementById('commentTextArea')
 
   useEffect(() => {
     if (!token) {
@@ -62,12 +62,11 @@ export function ProductDetailed() {
     },
   })
 
-  // eslint-disable-next-line no-unused-vars
   const { mutateAsync: commentAdd } = useMutation({
     // eslint-disable-next-line max-len
     mutationFn: (commentText) => api.addProductCommentRequest(productID, commentText, token),
-    onSuccess: (response) => {
-      console.log('коммент добавлен', response)
+    onSuccess: () => {
+      // console.log('коммент добавлен', response)
       queryClient.invalidateQueries({ queryKey: [productID] })
     },
     onError: (errResp) => {
@@ -83,14 +82,8 @@ export function ProductDetailed() {
     navigate('edit/')
   }
 
-  const addToCartHandler = (e) => {
-    // eslint-disable-next-line max-len
-    if ((e.target.parentNode.children.quantity.value) > 0) {
-      const quantity = Number(e.target.parentNode.children.quantity.value) <= productData.stock
-        ? Number(e.target.parentNode.children.quantity.value)
-        : productData.stock
-      dispatch(cartAddProduct(productData._id, quantity))
-    }
+  const addToCartHandler = () => {
+    if (!isInCart) { dispatch(cartAddProduct(productData._id, 1)) }
   }
 
   const changeFavStatusHandler = () => {
@@ -103,36 +96,18 @@ export function ProductDetailed() {
     isFav = !isFav
   }
 
+  // eslint-disable-next-line no-unused-vars
   const commentAddHandler = (event) => {
     if (event.target.parentNode.children.commentTextarea.value) {
       commentAdd(event.target.parentNode.children.commentTextarea.value)
     }
+    commentArea.value = ''
   }
   // --------------------------------------------
 
   //  ----- РАЗМЕТКА  -----
 
   if (isLoadingProduct || isLoadingUser) return <p>Уточняем данные...</p>
-  /*
-  const { data: usersData = [], isLoading: isLoadingAuthors } = useQuery({
-    queryKey: ['users', productData.reviews.map((comment) => comment.author)],
-    queryFn: () => api.getUsersByIDs(productData.reviews.map((comment) => comment.author), token),
-    // onSuccess: (response) => cartLoadOnSuccess(response),
-  })
-
-  console.log('productData: ', productData)
-  console.log('userData ', userData)
-  console.log('usersData ', usersData)
-
-  const commentsExtended = productData.reviews.map((comment) => {
-    const userFromServer = usersData.find((itemFind) => itemFind._id === comment.author)
-    return {
-      ...comment,
-      ...userFromServer,
-    }
-  })
-
-  if (isLoadingProduct || isLoadingUser || isLoadingAuthors) return <p>Уточняем данные...</p> */
 
   return (
     <>
@@ -144,7 +119,6 @@ export function ProductDetailed() {
             <p>Это Ваш товар, и Вы можете поменять его инфу.</p>
             <button type="button" onClick={productDataEditHandler}>Поменять данные о товаре</button>
             <br />
-            <div>{productData._id}</div>
             <br />
           </>
           )}
@@ -175,26 +149,17 @@ export function ProductDetailed() {
         </div>
 
         <div className={prodStyles.cardCartElementsContainer}>
-          <input
-            name="quantity"
-            type="number"
-            min="0"
-            max={productData.stock}
-            className={prodStyles.cardCartInput}
-            placeholder="0"
-          />
           <button
             type="button"
-            className={prodStyles.cardCartButton}
-            onClick={(e) => addToCartHandler(e)}
+            className={`${prodStyles.cardCartButton} ${isInCart && prodStyles.cardCartButtonIn}`}
+            onClick={addToCartHandler}
           >
-            в корзину
-
+            {`${isInCart ? 'уже в корзине' : 'в корзину'}`}
           </button>
         </div>
       </div>
       <br />
-      <p>Отзывы:</p>
+      <h2>Отзывы:</h2>
       <div className={prodStyles.reviewInputContainer}>
         <button
           className={prodStyles.commentButton}
@@ -203,7 +168,7 @@ export function ProductDetailed() {
         >
           Добавить отзыв
         </button>
-        <textarea className={prodStyles.commentInput} name="commentTextarea" />
+        <textarea className={prodStyles.commentInput} name="commentTextarea" id="commentTextArea" />
       </div>
       <div>
         {productData.reviews.map((comment) => (
